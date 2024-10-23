@@ -37,7 +37,6 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     double extraTop = MediaQuery.of(context).padding.top;
@@ -46,9 +45,11 @@ class _SearchPageState extends State<SearchPage> {
     double teclado = MediaQuery.of(context).viewInsets.bottom;
 
     lista.clear();
-    for(int i=0; i<10; i++){
-      lista.add(SizedBox(height: largo*0.017,));
-      lista.add(FoodCard(ancho: ancho*0.9, largo: largo*0.1));
+    for (int i = 0; i < 10; i++) {
+      lista.add(SizedBox(
+        height: largo * 0.017,
+      ));
+      lista.add(FoodCard(ancho: ancho * 0.9, largo: largo * 0.1));
     }
 
     if (teclado > 0 && !isKeyboardVisible && !scrollOpen) {
@@ -78,28 +79,26 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           // FONDO DE VENTANA PRINCIPAL
           Container(
-            width: ancho,
-            height: largo,
-            color: Color.fromARGB(255, 214, 226, 218),
-            child: Column(
-              children: [
-                Container(
-                  height: extraTop,
-                  width: ancho,
-                  color: Color.fromARGB(255, 214, 226, 218),
-                ),
-                Container(
-                  height: largo-extraTop,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: lista,
-                    ),
+              width: ancho,
+              height: largo,
+              color: Color.fromARGB(255, 241, 241, 241),
+              child: Column(
+                children: [
+                  Container(
+                    height: extraTop,
+                    width: ancho,
+                    color: Color.fromARGB(255, 214, 226, 218),
                   ),
-                )
-              ],
-            )
-      
-          ),
+                  Container(
+                    height: largo * 0.75,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: lista,
+                      ),
+                    ),
+                  )
+                ],
+              )),
 
           // DRAGGABLE SCROLLABLE SHEET
           DraggableScrollableSheet(
@@ -112,8 +111,18 @@ class _SearchPageState extends State<SearchPage> {
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
                 width: ancho,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 248, 248, 248),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey
+                          .withOpacity(0.5), // Color de la sombra con opacidad
+                      spreadRadius: 5, // Expansión de la sombra
+                      blurRadius: 7, // Suavidad de la sombra
+                      offset:
+                          Offset(0, 3), // Desplazamiento de la sombra (x, y)
+                    ),
+                  ],
+                  color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
