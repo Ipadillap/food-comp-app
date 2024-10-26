@@ -18,10 +18,8 @@ class _InfoPageState extends State<InfoPage> {
       width: ancho,
       height: largo,
       color: Color.fromARGB(255, 214, 226, 218),
-      child: FoodCard(
-        ancho: ancho*0.9,
-        largo: largo*0.1,
-      ),
+      alignment: AlignmentDirectional.center,
+      child: Text("Info Page")
     );
   }
 }

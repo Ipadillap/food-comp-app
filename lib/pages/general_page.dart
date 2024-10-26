@@ -1,38 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/objects/food_item.dart';
 import 'package:food_app/objects/index.dart';
 import 'package:food_app/pages/info_page.dart';
-import 'prueba.dart';
+import 'search_page.dart';
+import 'compare_page.dart';
 
-class GeneralPageScreen extends StatefulWidget {
-  const GeneralPageScreen({Key? key}) : super(key: key);
+class GeneralPage extends StatefulWidget {
+  const GeneralPage({Key? key}) : super(key: key);
 
   @override
   _GeneralPageScreenState createState() => _GeneralPageScreenState();
 }
 
-class _GeneralPageScreenState extends State<GeneralPageScreen> {
+class _GeneralPageScreenState extends State<GeneralPage> {
   int _selectedIndex = 1;
+  List<FoodItem> compareList = [];
 
-  final SearchPage _searchPage = SearchPage();
+  late SearchPage _searchPage;
   final InfoPage _screenTwo = InfoPage();
-  final ScreenThree _screenThree = const ScreenThree();
+  late ComparePage _comparePage;
 
   late final List<Widget> _screens;
 
-  @override
-  void initState() {
-    super.initState();
-    _screens = <Widget>[
-      _screenTwo,
-      _searchPage,
-      _screenThree,
-    ];
-  }
+  final GlobalKey<ComparePageState> comparePageKey = GlobalKey<ComparePageState>();
+  final GlobalKey<SearchPageState> searchPageKey = GlobalKey<SearchPageState>();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if(index==2){
+        callRefreshFromCompare();
+      }
+      if(index==1){
+        print("1");
+        callRefreshFromSearch();
+      }
     });
+  }
+
+  void callRefreshFromCompare() {
+    comparePageKey.currentState?.resfresh();
+  }
+
+  void callRefreshFromSearch() {
+     searchPageKey.currentState?.resfresh();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _comparePage =       ComparePage(key: comparePageKey, compareList: compareList);
+    _searchPage = SearchPage(compareList: compareList,);
+    _screens = <Widget>[
+      _screenTwo,
+      _searchPage,
+      _comparePage,
+    ];
   }
 
   @override
@@ -63,7 +86,7 @@ class _GeneralPageScreenState extends State<GeneralPageScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 38, 51, 66),
+        selectedItemColor: Color.fromARGB(255, 0, 113, 91),
         onTap: _onItemTapped,
         selectedIconTheme: const IconThemeData(
           size: 35, // Tamaño del icono seleccionado
@@ -72,18 +95,6 @@ class _GeneralPageScreenState extends State<GeneralPageScreen> {
           size: 25, // Tamaño de los iconos no seleccionados
         ),
       ),
-    );
-  }
-}
-
-
-class ScreenThree extends StatelessWidget {
-  const ScreenThree({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Compare Screen', style: TextStyle(fontSize: 24)),
     );
   }
 }

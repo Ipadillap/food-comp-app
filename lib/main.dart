@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/pages/general_page.dart';
-import 'package:food_app/pages/prueba.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +14,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
         ),
-        home: GeneralPageScreen());
+        home: GeneralPage());
   }
 }
