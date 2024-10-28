@@ -22,17 +22,17 @@ class _GeneralPageScreenState extends State<GeneralPage> {
 
   late final List<Widget> _screens;
 
-  final GlobalKey<ComparePageState> comparePageKey = GlobalKey<ComparePageState>();
+  final GlobalKey<ComparePageState> comparePageKey =
+      GlobalKey<ComparePageState>();
   final GlobalKey<SearchPageState> searchPageKey = GlobalKey<SearchPageState>();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if(index==2){
+      if (index == 2) {
         callRefreshFromCompare();
       }
-      if(index==1){
-        print("1");
+      if (index == 1) {
         callRefreshFromSearch();
       }
     });
@@ -43,14 +43,14 @@ class _GeneralPageScreenState extends State<GeneralPage> {
   }
 
   void callRefreshFromSearch() {
-     searchPageKey.currentState?.resfresh();
+    searchPageKey.currentState?.resfresh();
   }
 
   @override
   void initState() {
     super.initState();
-    _comparePage =       ComparePage(key: comparePageKey, compareList: compareList);
-    _searchPage = SearchPage(compareList: compareList,);
+    _comparePage = ComparePage(key: comparePageKey, compareList: compareList);
+    _searchPage = SearchPage(key: searchPageKey, compareList: compareList);
     _screens = <Widget>[
       _screenTwo,
       _searchPage,

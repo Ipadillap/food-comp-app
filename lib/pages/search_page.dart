@@ -15,14 +15,16 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
-  final DraggableScrollableController _scrollController = DraggableScrollableController();
-  final GlobalKey<FoodCardState> foodCardState = GlobalKey<FoodCardState>();
+  final DraggableScrollableController _scrollController =
+      DraggableScrollableController();
 
+  List<FoodItem> itemsList = []; //cardsList de food_item buscadops
+  List<Widget> cardsList =
+      []; // cardsList de food_card asociada a cada food_item
 
+  // parametros de manipulacion de teclado y scroll del search
   bool isKeyboardVisible = false;
   bool scrollOpen = false;
-  int cant = 10;
-  List<Widget> lista = [];
   double minExpand = 0.17;
   double maxExpand = 0.68;
 
@@ -47,20 +49,11 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     double extraTop = MediaQuery.of(context).padding.top;
     double ancho = MediaQuery.of(context).size.width.toDouble();
     double largo = MediaQuery.of(context).size.height.toDouble();
     double teclado = MediaQuery.of(context).viewInsets.bottom;
-  
-    lista.clear();
-    for (int i = 0; i < 6; i++) {
-      
-      FoodItem food= FoodItem(id: i, name: "FOOD "+(i+1).toString(), compare: false);
-      lista.add(FoodCard(ancho: ancho * 0.9, largo: largo * 0.1, data: food, compareList: widget.compareList,));
-    }
-    //lista.clear();
+    generateCards(ancho, largo);
 
     if (teclado > 0 && !isKeyboardVisible && !scrollOpen) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -103,7 +96,7 @@ class SearchPageState extends State<SearchPage> {
                     height: largo * 0.75,
                     child: SingleChildScrollView(
                       child: Column(
-                        children: lista,
+                        children: cardsList,
                       ),
                     ),
                   )
@@ -142,27 +135,98 @@ class SearchPageState extends State<SearchPage> {
                   controller: scrollController, // Controla el deslizamiento
                   child: Column(
                     children: [
-
                       // Indicador de arrastre
                       Container(
                         width: ancho * 0.3,
                         height: ancho * 0.1,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 64, 80, 103),
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
                         ),
-                        child: IconButton(onPressed: (){
-                          setState(() {
-                            filterTogle();
-                          });
-                        },
-                        icon: Icon(Icons.dehaze_rounded, color: Colors.white,)),
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                filterTogle();
+                              });
+                            },
+                            icon: Icon(
+                              Icons.dehaze_rounded,
+                              color: Colors.white,
+                            )),
                       ),
 
                       SizedBox(height: largo * 0.025),
 
                       // BUSCADOR
-                      SearchBarWidget(ancho: ancho * 0.9, largo: largo * 0.06),
+                      SizedBox(
+                        width: ancho * 0.9,
+                        height: largo * 0.06,
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            // Campo de búsqueda
+                            Container(
+                              height: largo * 0.06,
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 236, 236, 236),
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      maxLines: 1,
+                                      decoration: const InputDecoration(
+                                        isDense: true,
+                                        hintText: 'Nombre o ID de alimento',
+                                        hintStyle: TextStyle(
+                                            color:
+                                                Color.fromARGB(157, 41, 52, 65),
+                                            fontWeight: FontWeight.w400),
+                                        border: InputBorder.none,
+                                      ),
+                                      onChanged: (value) {
+                                        simulatedSearch(ancho, largo);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Botón de búsqueda
+                            Container(
+                              width: largo * 0.06,
+                              height: largo * 0.06,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromARGB(255, 236, 236, 236),
+                              ),
+                              child: Container(
+                                width: largo * 0.06,
+                                height: largo * 0.06,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color.fromARGB(255, 64, 80, 103),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.search),
+                                  color:
+                                      const Color.fromARGB(255, 236, 236, 236),
+                                  onPressed: () {
+                                    simulatedSearch(ancho, largo);
+                                  },
+                                  iconSize: largo * 0.06 * 0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                       SizedBox(height: largo * 0.03),
 
@@ -278,22 +342,21 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
-void filterTogle() {
-  if (_scrollController.size == minExpand) {
-    _scrollController.animateTo(
-      maxExpand,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  } else {
-    _scrollController.animateTo(
-      minExpand,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+  void filterTogle() {
+    if (_scrollController.size == minExpand) {
+      _scrollController.animateTo(
+        maxExpand,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _scrollController.animateTo(
+        minExpand,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
-}
-
 
   Widget _buildNutrientContent(double ancho, double largo) {
     return Row(
@@ -368,11 +431,29 @@ void filterTogle() {
       ],
     );
   }
-  
-  void resfresh() {
-    print("s");
-    for(int i=0; i<lista.length; i++){
-      foodCardState.currentState?.resfresh();
+
+  void simulatedSearch(double ancho, double largo) {
+    itemsList.clear();
+    for (int i = 0; i < 6; i++) {
+      itemsList.add(
+          FoodItem(id: i, name: "FOOD " + (i + 1).toString(), compare: false));
     }
+    setState(() {});
+  }
+
+  void generateCards(double ancho, double largo) {
+    cardsList.clear();
+    for (int i = 0; i < itemsList.length; i++) {
+      cardsList.add(FoodCard(
+        ancho: ancho * 0.9,
+        largo: largo * 0.1,
+        data: itemsList[i],
+        compareList: widget.compareList,
+      ));
+    }
+  }
+
+  void resfresh() {
+    setState(() {});
   }
 }

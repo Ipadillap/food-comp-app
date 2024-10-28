@@ -8,20 +8,19 @@ class FoodCompareCard extends StatefulWidget {
   List<FoodItem> compareList;
   final VoidCallback refresh;
 
-  FoodCompareCard({
-    Key? key,
-    required this.ancho,
-    required this.largo,
-    required this.data,
-    required this.compareList,
-    required this.refresh
-  }) : super(key: key);
+  FoodCompareCard(
+      {Key? key,
+      required this.ancho,
+      required this.largo,
+      required this.data,
+      required this.compareList,
+      required this.refresh})
+      : super(key: key);
   @override
   State<FoodCompareCard> createState() => _FoodCompareCardState();
 }
 
 class _FoodCompareCardState extends State<FoodCompareCard> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +28,7 @@ class _FoodCompareCardState extends State<FoodCompareCard> {
       width: widget.ancho,
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 255, 255),
-          border:  Border(bottom: BorderSide(color: Colors.blueGrey, width: 1)),
+          border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 1)),
           borderRadius: BorderRadius.all(Radius.circular(0))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,15 +86,15 @@ class _FoodCompareCardState extends State<FoodCompareCard> {
                   color: Color.fromARGB(255, 218, 89, 89)),
               child: IconButton(
                 onPressed: () {
-                  print("object");
-                  for(int i=0; i<widget.compareList.length; i++){
-                        if (widget.compareList[i].id==widget.data.id){
-                          print("eliminado");
-                          widget.compareList.removeAt(i);
-                          i=widget.compareList.length;
-                          widget.refresh();
-                        }
-                      }
+                  for (int i = 0; i < widget.compareList.length; i++) {
+                    if (widget.compareList[i].id == widget.data.id) {
+                      widget.data.changeState();
+                      print("eliminado");
+                      widget.compareList.removeAt(i);
+                      i = widget.compareList.length;
+                      widget.refresh();
+                    }
+                  }
                 },
                 icon: Icon(Icons.remove),
                 iconSize: widget.largo * 0.3,

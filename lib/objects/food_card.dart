@@ -19,17 +19,16 @@ class FoodCard extends StatefulWidget {
 }
 
 class FoodCardState extends State<FoodCard> {
-  bool add_state = false;
   @override
   Widget build(BuildContext context) {
-    add_state = widget.data.compare;
+    bool add_state = widget.data.compare;
 
     return Container(
       height: widget.largo,
       width: widget.ancho,
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 255, 255),
-          border:  Border(bottom: BorderSide(color: Colors.blueGrey, width: 1)),
+          border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 1)),
           borderRadius: BorderRadius.all(Radius.circular(0))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +52,7 @@ class FoodCardState extends State<FoodCard> {
                   ),
                 ),
               ),
-              
+
               // INFO DEL ALIMENTO
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -85,28 +84,15 @@ class FoodCardState extends State<FoodCard> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: add_state ? Color.fromARGB(255, 218, 89, 89) : Color.fromARGB(255, 79, 180, 123)),
+                  color: add_state
+                      ? Color.fromARGB(255, 218, 89, 89)
+                      : Color.fromARGB(255, 79, 180, 123)),
               child: IconButton(
                 onPressed: () {
-                  if (add_state){
-                    setState(() {
-                      widget.data.compare = false;
-                      for(int i=0; i<widget.compareList.length; i++){
-                        if (widget.compareList[i].id==widget.data.id){
-                          widget.compareList.removeAt(i);
-                          i=widget.compareList.length;
-                        }
-                      }
-                    });
-                  }
-                  else{
-                    setState(() {
-                      widget.data.compare = true;
-                      widget.compareList.add(widget.data);
-                    });
-                  }
+                  widget.data.changeState();
+                  changeState(add_state);
                 },
-                icon: add_state? Icon(Icons.remove) : Icon(Icons.add),
+                icon: add_state ? Icon(Icons.remove) : Icon(Icons.add),
                 iconSize: widget.largo * 0.3,
                 color: Colors.white,
               ),
@@ -116,9 +102,21 @@ class FoodCardState extends State<FoodCard> {
       ),
     );
   }
-  
-  void resfresh() {
+
+  void changeState(bool add_state) {
+    if (add_state) {
       setState(() {
+        for (int i = 0; i < widget.compareList.length; i++) {
+          if (widget.compareList[i].id == widget.data.id) {
+            widget.compareList.removeAt(i);
+            i = widget.compareList.length;
+          }
+        }
       });
+    } else {
+      setState(() {
+        widget.compareList.add(widget.data);
+      });
+    }
   }
 }
