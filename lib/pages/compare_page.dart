@@ -61,8 +61,9 @@ class ComparePageState extends State<ComparePage> {
   Widget build(BuildContext context) {
     double ancho = MediaQuery.of(context).size.width.toDouble();
     double largo = MediaQuery.of(context).size.height.toDouble() - kBottomNavigationBarHeight;
-    Color colorBackground = const Color.fromARGB(255, 121, 157, 194);
-
+    Color colorBackground = const Color.fromARGB(255, 170, 204, 198);
+    Color colorInfoZone = const Color.fromARGB(255, 255, 255, 255);
+    Color colorSecondary = const Color.fromARGB(255, 219, 83, 117);
     return Container(
       width: ancho,
       height: largo,
@@ -74,26 +75,98 @@ class ComparePageState extends State<ComparePage> {
       )
           : widget.compareList.isNotEmpty
           ? Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            height: largo * 0.35,
-            width: ancho,
-            color: Colors.transparent,
-          ),
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
 
-          Container(
-            width: double.infinity,
-            height: largo * 0.6,
-            child: SingleChildScrollView(
-              child: Column(
+              // CONTAINER BASE Y TABLAS DE COMPARACIONES
+              Container(
+                height: largo*0.65,
+                width: ancho,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      width: ancho,
+                      height: largo * 0.645,
+                      decoration: BoxDecoration(
+                        color: colorInfoZone,
+                        border: Border.all(color: colorInfoZone),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                        ),
+                      ),
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: largo*0.55,
+                        width: ancho,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: largo*0.03,
+                              ),
+                              _buildEnergyTable(compareFoods, ancho),
+                              _buildMainNutrientsTable(compareFoods, ancho),
+                              _buildMicronutrientsTable(compareFoods, ancho),
+                            ],
+                          ),
+                        ),
+                      )
+                  ),
+                )
+              ),
+
+              // CONTAINER "LISTA DE COMPARACION"
+              Column(
                 children: [
-                  _buildEnergyTable(compareFoods, ancho),
-                  _buildMainNutrientsTable(compareFoods, ancho),
-                  _buildMicronutrientsTable(compareFoods, ancho),
+                  Material(
+                    elevation: 5,
+                    color: Colors.transparent, // Evita el color por defecto de Material
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                        topRight: Radius.circular(5),
+                        topLeft: Radius.circular(5),
+                      ),
+                    ),
+                    child: Container(
+                      width: ancho * 0.6,
+                      height: largo * 0.105,
+                      decoration: BoxDecoration(
+                        color: colorSecondary,
+                        border: Border.all(color: colorSecondary),
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                          topRight: Radius.circular(5),
+                          topLeft: Radius.circular(5),
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Lista de comparación",
+                        style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
-            ),
-          )
+
+            ],
+          ),
+
+
+
         ],
       )
           : const Center(
@@ -149,7 +222,7 @@ class ComparePageState extends State<ComparePage> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "ID: ${food.id}",
+                        "${food.code}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     );
@@ -169,7 +242,7 @@ class ComparePageState extends State<ComparePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        energy.measurementUnit,
+                        100.toString()+ " "+energy.measurementUnit,
                         style: const TextStyle(color: Colors.black),
                       ),
                     ),
@@ -250,7 +323,7 @@ class ComparePageState extends State<ComparePage> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "ID: ${food.id}",
+                        "${food.code}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     );
@@ -270,7 +343,7 @@ class ComparePageState extends State<ComparePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        mainNutrient.measurementUnit,
+                        100.toString()+ " "+mainNutrient.measurementUnit,
                         style: const TextStyle(color: Colors.black),
                       ),
                     ),
@@ -315,7 +388,7 @@ class ComparePageState extends State<ComparePage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          component.measurementUnit,
+                          100.toString()+ " "+component.measurementUnit,
                           style: const TextStyle(color: Colors.black),
                         ),
                       ),
@@ -375,10 +448,6 @@ class ComparePageState extends State<ComparePage> {
     final uniqueVitamins = _getUniqueMicronutrients(foodDetailsList, "vitamins");
     final uniqueMinerals = _getUniqueMicronutrients(foodDetailsList, "minerals");
 
-    uniqueVitamins.values.forEach((v) => print("${v.name} (ID: ${v.nutrientId})"));
-
-    uniqueMinerals.values.forEach((m) => print("${m.name} (ID: ${m.nutrientId})"));
-
     Widget _buildMicronutrientTable(String title, Map<int, NutrientMeasurement> uniqueMicronutrients, String key) {
       final sortedMicronutrients = uniqueMicronutrients.values.toList()
         ..sort((a, b) => a.nutrientId.compareTo(b.nutrientId));
@@ -404,7 +473,7 @@ class ComparePageState extends State<ComparePage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "ID: ${food.id}",
+                      "${food.code}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );
@@ -424,7 +493,7 @@ class ComparePageState extends State<ComparePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      micronutrient.measurementUnit,
+                      100.toString()+ " "+micronutrient.measurementUnit,
                       style: const TextStyle(color: Colors.black),
                     ),
                   ),

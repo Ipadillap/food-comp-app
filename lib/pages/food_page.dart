@@ -1016,7 +1016,7 @@ class _FoodPageState extends State<FoodPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      nutrient.measurementUnit,
+                      100.toString()+ " "+ nutrient.measurementUnit,
                       style: const TextStyle(color: Colors.black),
                     ),
                   ),

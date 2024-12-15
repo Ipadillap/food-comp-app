@@ -20,6 +20,7 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _valueSelected = TextEditingController();
+  int quantityToCompare = 0;
 
   String typeSelected = "";
   final typeOptions = [
@@ -140,22 +141,46 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 child: Container(
                   width: ancho,
                   height: largo * 0.08,
-                  padding: EdgeInsets.only(left: 25),
                   decoration: BoxDecoration(
                     color: colorBusqueda,
                     border: Border.all(color: colorBusqueda),
                   ),
                   alignment: Alignment.bottomCenter,
-                  child: Text(
-                    "CAPCHICAL",
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: largo * 0.08,
+                        alignment: Alignment.bottomCenter,
+                        padding: EdgeInsets.all(0),
+                        child: Text(
+                          "CAPCHICAL",
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+
+                      Container(
+                        height: largo * 0.06,
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          "  app",
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ),
               ),
 
