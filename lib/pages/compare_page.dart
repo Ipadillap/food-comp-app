@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/components/food_compare_card.dart';
 import 'package:food_app/components/food_Item_details.dart';
 import 'package:food_app/components/food_item.dart';
 import 'package:food_app/api_service.dart';
@@ -195,90 +194,87 @@ class ComparePageState extends State<ComparePage> {
       title: "Valores energético",
       content: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Container(
-          width: ancho,
-          child: Table(
-            defaultColumnWidth: const IntrinsicColumnWidth(),
-            border: TableBorder.all(color: Colors.grey, width: 0.5),
-            children: [
-              TableRow(
-                decoration: const BoxDecoration(color: Color.fromARGB(255, 230, 230, 230)),
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+        child: Table(
+          defaultColumnWidth: const FixedColumnWidth(120.0), // Fija el ancho de cada columna
+          border: TableBorder.all(color: Colors.grey, width: 0.5),
+          children: [
+            TableRow(
+              decoration: const BoxDecoration(color: Color.fromARGB(255, 230, 230, 230)),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Energía",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Unidad",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ...foodDetailsList.map((food) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Energía",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "${food.code}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }),
+              ],
+            ),
+            ...sortedEnergies.map((energy) {
+              return TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      energy.name,
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Unidad",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "100 ${energy.measurementUnit}",
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                   ...foodDetailsList.map((food) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "${food.code}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-              ...sortedEnergies.map((energy) {
-                return TableRow(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        energy.name,
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        100.toString()+ " "+energy.measurementUnit,
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ...foodDetailsList.map((food) {
-                      final matchingEnergy = food.nutrientMeasurements.energy
-                          .firstWhere((e) => e.nutrientId == energy.nutrientId, orElse: () => NutrientMeasurement(
+                    final matchingEnergy = food.nutrientMeasurements.energy.firstWhere(
+                          (e) => e.nutrientId == energy.nutrientId,
+                      orElse: () => NutrientMeasurement(
                         nutrientId: -1,
                         name: "",
                         measurementUnit: "",
                         average: 0.0,
                         standardized: false,
                         dataType: "",
-                      ));
+                      ),
+                    );
 
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          matchingEnergy != null
-                              ? matchingEnergy.average.toStringAsFixed(2)
-                              : "-",
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }),
-                  ],
-                );
-              }).toList(),
-            ],
-          ),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        matchingEnergy.nutrientId != -1
+                            ? matchingEnergy.average.toStringAsFixed(2)
+                            : "-",
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            }).toList(),
+          ],
         ),
       ),
       ancho: ancho,
     );
-
   }
-
   Widget _buildMainNutrientsTable(List<FoodItemDetails> foodDetailsList, double ancho) {
     final uniqueMainNutrients = <int, NutrientMeasurementWithComponents>{};
     for (var food in foodDetailsList) {

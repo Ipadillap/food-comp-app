@@ -14,6 +14,7 @@ class GeneralPage extends StatefulWidget {
 class _GeneralPageScreenState extends State<GeneralPage> {
   int _selectedIndex = 1;
   List<FoodItem> compareList = [];
+  int quantityToCompare = 0;
 
   late SearchPage _searchPage;
   final InfoPage _screenTwo = InfoPage();
@@ -45,11 +46,22 @@ class _GeneralPageScreenState extends State<GeneralPage> {
     searchPageKey.currentState?.resfresh();
   }
 
+  int getQuantity() {
+    return quantityToCompare;
+  }
+
+  void updateQuantity(int newQuantity) {
+    setState(() {
+      print(newQuantity.toString());
+      quantityToCompare = newQuantity;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _comparePage = ComparePage(key: comparePageKey, compareList: compareList);
-    _searchPage = SearchPage(key: searchPageKey, compareList: compareList);
+    _searchPage = SearchPage(key: searchPageKey, compareList: compareList, quantityToCompare: getQuantity, onQuantityChanged: updateQuantity,);
     _screens = <Widget>[
       _screenTwo,
       _searchPage,
@@ -67,7 +79,7 @@ class _GeneralPageScreenState extends State<GeneralPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
             label: 'Info',
@@ -77,7 +89,33 @@ class _GeneralPageScreenState extends State<GeneralPage> {
             label: 'Foods',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.compare_arrows),
+            icon: Stack(
+              clipBehavior: Clip.none, // Permite que los hijos sobresalgan
+              children: [
+                 Icon(Icons.compare_arrows), // Ícono base
+                Positioned(
+                  right: -15, // Posición ajustada respecto al ícono
+                  top: -6,
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      quantityToCompare.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             label: 'Compare',
           ),
         ],

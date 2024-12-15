@@ -7,10 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
   final List<FoodItem> compareList;
+  final Function() quantityToCompare;
+  final Function(int) onQuantityChanged;
 
   SearchPage({
     Key? key,
     required this.compareList,
+    required this.quantityToCompare,
+    required this.onQuantityChanged
   }) : super(key: key);
 
   @override
@@ -20,7 +24,6 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _valueSelected = TextEditingController();
-  int quantityToCompare = 0;
 
   String typeSelected = "";
   final typeOptions = [
@@ -717,6 +720,8 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           largo: largo * 0.135,
           data: item,
           compareList: widget.compareList,
+          quantityToCompare: widget.quantityToCompare,
+          onQuantityChanged: widget.onQuantityChanged,
         ),
       );
       cardsList.add(SizedBox(

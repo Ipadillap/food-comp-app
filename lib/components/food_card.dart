@@ -7,13 +7,17 @@ class FoodCard extends StatefulWidget {
   final double largo;
   final FoodItem data;
   final List<FoodItem> compareList;
+  final Function() quantityToCompare;
+  final Function(int) onQuantityChanged;
 
   FoodCard({
     Key? key,
+    required this.quantityToCompare,
     required this.ancho,
     required this.largo,
     required this.data,
     required this.compareList,
+    required this.onQuantityChanged
   }) : super(key: key);
   @override
   State<FoodCard> createState() => FoodCardState();
@@ -129,6 +133,7 @@ class FoodCardState extends State<FoodCard> {
   }
 
   void changeState(bool add_state) {
+    int quantity = widget.quantityToCompare();
     if (add_state) {
       setState(() {
         for (int i = 0; i < widget.compareList.length; i++) {
@@ -137,11 +142,17 @@ class FoodCardState extends State<FoodCard> {
             i = widget.compareList.length;
           }
         }
+        quantity--;
+        widget.onQuantityChanged(quantity);
       });
     } else {
-      setState(() {
-        widget.compareList.add(widget.data);
-      });
+      if(quantity!=10){
+        setState(() {
+          quantity++;
+          widget.onQuantityChanged(quantity);
+          widget.compareList.add(widget.data);
+        });
+      }
     }
   }
 
