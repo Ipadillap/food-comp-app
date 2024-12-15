@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/objects/food_item.dart';
+import 'package:food_app/components/food_item.dart';
 
-class FoodCard extends StatefulWidget {
+class FoodCompareCard extends StatefulWidget {
   final double ancho;
   final double largo;
   final FoodItem data;
   List<FoodItem> compareList;
+  final VoidCallback refresh;
 
-  FoodCard({
-    Key? key,
-    required this.ancho,
-    required this.largo,
-    required this.data,
-    required this.compareList,
-  }) : super(key: key);
+  FoodCompareCard(
+      {Key? key,
+      required this.ancho,
+      required this.largo,
+      required this.data,
+      required this.compareList,
+      required this.refresh})
+      : super(key: key);
   @override
-  State<FoodCard> createState() => FoodCardState();
+  State<FoodCompareCard> createState() => _FoodCompareCardState();
 }
 
-class FoodCardState extends State<FoodCard> {
+class _FoodCompareCardState extends State<FoodCompareCard> {
   @override
   Widget build(BuildContext context) {
-    bool add_state = widget.data.compare;
-
     return Container(
       height: widget.largo,
       width: widget.ancho,
@@ -53,7 +53,6 @@ class FoodCardState extends State<FoodCard> {
                 ),
               ),
 
-              // INFO DEL ALIMENTO
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -61,7 +60,7 @@ class FoodCardState extends State<FoodCard> {
                     width: widget.ancho * 0.5,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      widget.data.name,
+                      widget.data.code,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -84,15 +83,20 @@ class FoodCardState extends State<FoodCard> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: add_state
-                      ? Color.fromARGB(255, 218, 89, 89)
-                      : Color.fromARGB(255, 79, 180, 123)),
+                  color: Color.fromARGB(255, 218, 89, 89)),
               child: IconButton(
                 onPressed: () {
-                  widget.data.changeState();
-                  changeState(add_state);
+                  for (int i = 0; i < widget.compareList.length; i++) {
+                    if (widget.compareList[i].id == widget.data.id) {
+                      widget.data.changeState();
+                      print("eliminado");
+                      widget.compareList.removeAt(i);
+                      i = widget.compareList.length;
+                      widget.refresh();
+                    }
+                  }
                 },
-                icon: add_state ? Icon(Icons.remove) : Icon(Icons.add),
+                icon: Icon(Icons.remove),
                 iconSize: widget.largo * 0.3,
                 color: Colors.white,
               ),
@@ -101,22 +105,5 @@ class FoodCardState extends State<FoodCard> {
         ],
       ),
     );
-  }
-
-  void changeState(bool add_state) {
-    if (add_state) {
-      setState(() {
-        for (int i = 0; i < widget.compareList.length; i++) {
-          if (widget.compareList[i].id == widget.data.id) {
-            widget.compareList.removeAt(i);
-            i = widget.compareList.length;
-          }
-        }
-      });
-    } else {
-      setState(() {
-        widget.compareList.add(widget.data);
-      });
-    }
   }
 }

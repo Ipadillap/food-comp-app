@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/objects/food_item.dart';
-import 'package:food_app/objects/index.dart';
+import 'package:food_app/components/food_item.dart';
 import 'package:food_app/pages/info_page.dart';
 import 'search_page.dart';
 import 'compare_page.dart';
@@ -60,9 +59,6 @@ class _GeneralPageScreenState extends State<GeneralPage> {
 
   @override
   Widget build(BuildContext context) {
-    double ancho = MediaQuery.of(context).size.width.toDouble();
-    double largo = MediaQuery.of(context).size.height.toDouble();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: IndexedStack(
@@ -89,10 +85,10 @@ class _GeneralPageScreenState extends State<GeneralPage> {
         selectedItemColor: Color.fromARGB(255, 0, 113, 91),
         onTap: _onItemTapped,
         selectedIconTheme: const IconThemeData(
-          size: 35, // Tamaño del icono seleccionado
+          size: 24,
         ),
         unselectedIconTheme: const IconThemeData(
-          size: 25, // Tamaño de los iconos no seleccionados
+          size: 24,
         ),
       ),
     );

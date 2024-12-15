@@ -62,7 +62,7 @@ class _MatematicSelectorWidgetState extends State<MatematicSelectorWidget> {
             setState(() {
               selectedOption = newValue;
             });
-            widget.onSelected(newValue); // Notifica el valor seleccionado
+            widget.onSelected(newValue);
           },
           customButton: widget.seeArrow
               ? null
@@ -74,17 +74,17 @@ class _MatematicSelectorWidgetState extends State<MatematicSelectorWidget> {
                     selectedOption ?? widget.hintText,
                     style: const TextStyle(color: Colors.black),
                   ),
-                ), // Si no queremos la flecha, renderizamos un widget personalizado
+                ),
           dropdownStyleData: DropdownStyleData(
             padding: EdgeInsets.all(0),
             maxHeight:
-                widget.largo * 5, // Limita el número de opciones visibles
+                widget.largo * 5,
             offset:
-                const Offset(0, 0), // Posiciona el dropdown debajo del botón
+                const Offset(0, 0),
           ),
           menuItemStyleData: MenuItemStyleData(
-            height: widget.largo, // Ajusta la altura de cada opción
-            padding: const EdgeInsets.all(0), // Evita padding adicional
+            height: widget.largo,
+            padding: const EdgeInsets.all(0),
           ),
         ),
       ),

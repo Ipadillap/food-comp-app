@@ -1,458 +1,706 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_app/objects/food_item.dart';
-import 'package:food_app/objects/index.dart';
+import 'package:food_app/api_service.dart';
+import 'package:food_app/components/food_item.dart';
+import 'package:food_app/components/index.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
-  List<FoodItem> compareList;
+  final List<FoodItem> compareList;
 
   SearchPage({
     Key? key,
     required this.compareList,
   }) : super(key: key);
+
   @override
   State<SearchPage> createState() => SearchPageState();
 }
 
-class SearchPageState extends State<SearchPage> {
-  final DraggableScrollableController _scrollController =
-      DraggableScrollableController();
+class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _valueSelected = TextEditingController();
 
-  List<FoodItem> itemsList = []; //cardsList de food_item buscadops
-  List<Widget> cardsList =
-      []; // cardsList de food_card asociada a cada food_item
+  String typeSelected = "";
+  final typeOptions = [
+    'Seleccionar todos',
+  ];
+  String regionSelected = "";
+  final regionOptions = [
+    'Seleccionar todos'
+  ];
+  final regionIDs = [];
+  String groupSelected = "";
+  final groupOptions = [
+    'Seleccionar todos',
+  ];
+  String nutrientSelected = "";
+  final nutrientsOptions = [
+    'Seleccionar todos',
+  ];
+  final nutrientsIDs = [];
+  String operatorSelected = "=";
 
-  // parametros de manipulacion de teclado y scroll del search
-  bool isKeyboardVisible = false;
-  bool scrollOpen = false;
-  double minExpand = 0.17;
-  double maxExpand = 0.68;
+
+
+  List<FoodItem> itemsList = [];
+  List<Widget> cardsList = [];
+
+  final ApiService _apiService = ApiService();
+  bool _isLoading = false;
+
+  bool _isExpanded = false;
+  late AnimationController _controller;
+  late Animation<double> _sizeAnimation;
+  final Duration animationDuration = const Duration(milliseconds: 200);
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: animationDuration,
+    );
 
-    _scrollController.addListener(() {
-      double position = _scrollController.size;
+    _sizeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    setState(() {
+      loadRegionOptions();
+      loadTypesOptions();
+      loadGroupsOptions();
+      loadNutrientsOptions();
+      _searchFood(
+          _nameController.text,
+          typeSelected,
+          regionSelected,
+          groupSelected,
+          nutrientSelected,
+          operatorSelected,
+          0.toString(),
+      );
+    });
+  }
 
-      if (position >= 0.50 && !scrollOpen) {
-        setState(() {
-          scrollOpen = true;
-        });
-      } else if (position < 0.50 && scrollOpen) {
-        setState(() {
-          scrollOpen = false;
-        });
+  void _toggleExpansion() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double extraTop = MediaQuery.of(context).padding.top;
     double ancho = MediaQuery.of(context).size.width.toDouble();
-    double largo = MediaQuery.of(context).size.height.toDouble();
-    double teclado = MediaQuery.of(context).viewInsets.bottom;
-    generateCards(ancho, largo);
-
-    if (teclado > 0 && !isKeyboardVisible && !scrollOpen) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollController.animateTo(
-          maxExpand,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      });
-      isKeyboardVisible = true;
-    } else if (teclado == 0 && isKeyboardVisible) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollController.animateTo(
-          minExpand,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      });
-      isKeyboardVisible = false;
-    }
-
+    double largo = MediaQuery.of(context).size.height.toDouble() - kBottomNavigationBarHeight - extraTop;
+    Color colorBusqueda = Color.fromARGB(255, 104, 166, 145);
+    Color colorBackground = Color.fromARGB(255, 250, 250, 250);
+    Color colorFilterText = Color.fromARGB(255, 255, 255, 255);
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: colorBackground,
       body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
+        alignment: Alignment.topCenter,
         children: [
-          // FONDO DE VENTANA PRINCIPAL
           Container(
-              width: ancho,
-              height: largo,
-              color: Color.fromARGB(255, 255, 255, 255),
+            width: ancho,
+            height: largo + extraTop,
+            color: colorBackground,
+            child: SingleChildScrollView(
               child: Column(
-                children: [
-                  Container(
-                    height: extraTop,
-                    width: ancho,
-                    color: Color.fromARGB(255, 214, 226, 218),
+                children: cardsList,
+              ),
+            ),
+          ),
+
+          // COLUMNA DE BUSCADOR Y FILTROS
+          Column(
+            children: [
+              // SEPARADOR SUPERIOR
+              Container(
+                height: extraTop,
+                width: ancho,
+                color: colorBusqueda,
+              ),
+
+              // TITLE CONTAINER
+              GestureDetector( onTap: (){_generateCards(ancho, largo, extraTop);},
+                child: Container(
+                  width: ancho,
+                  height: largo * 0.08,
+                  padding: EdgeInsets.only(left: 25),
+                  decoration: BoxDecoration(
+                    color: colorBusqueda,
+                    border: Border.all(color: colorBusqueda),
                   ),
-                  Container(
-                    height: largo * 0.75,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: cardsList,
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    "CAPCHICAL",
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
-                  )
-                ],
-              )),
-
-          // DRAGGABLE SCROLLABLE SHEET
-          DraggableScrollableSheet(
-            controller: _scrollController,
-            initialChildSize: minExpand,
-            minChildSize: minExpand,
-            maxChildSize: maxExpand,
-            snap: true,
-            snapSizes: [minExpand, maxExpand],
-            builder: (BuildContext context, ScrollController scrollController) {
-              return Container(
-                width: ancho,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.5), // Color de la sombra con opacidad
-                      spreadRadius: 5, // Expansión de la sombra
-                      blurRadius: 7, // Suavidad de la sombra
-                      offset:
-                          Offset(0, 3), // Desplazamiento de la sombra (x, y)
-                    ),
-                  ],
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
                   ),
                 ),
-                child: SingleChildScrollView(
-                  controller: scrollController, // Controla el deslizamiento
-                  child: Column(
-                    children: [
-                      // Indicador de arrastre
-                      Container(
-                        width: ancho * 0.3,
-                        height: ancho * 0.1,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 64, 80, 103),
+              ),
+
+              // SEARCH BAR
+              Container(
+                width: ancho,
+                height: largo * 0.08,
+                decoration: BoxDecoration(
+                  color: colorBusqueda,
+                  border: Border.all(color: colorBusqueda),
+                ),
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // BOTON DE BUSQUEDA
+                    Container(
+                      child: Container(
+                        width: largo * 0.055,
+                        height: largo * 0.055,
+                        decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10)),
+                          color: const Color.fromARGB(255, 236, 236, 236),
                         ),
                         child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                filterTogle();
-                              });
-                            },
-                            icon: Icon(
-                              Icons.dehaze_rounded,
-                              color: Colors.white,
-                            )),
-                      ),
-
-                      SizedBox(height: largo * 0.025),
-
-                      // BUSCADOR
-                      SizedBox(
-                        width: ancho * 0.9,
-                        height: largo * 0.06,
-                        child: Stack(
-                          alignment: Alignment.centerRight,
-                          children: [
-                            // Campo de búsqueda
-                            Container(
-                              height: largo * 0.06,
-                              padding: EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 236, 236, 236),
-                                borderRadius: BorderRadius.circular(50.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      maxLines: 1,
-                                      decoration: const InputDecoration(
-                                        isDense: true,
-                                        hintText: 'Nombre o ID de alimento',
-                                        hintStyle: TextStyle(
-                                            color:
-                                                Color.fromARGB(157, 41, 52, 65),
-                                            fontWeight: FontWeight.w400),
-                                        border: InputBorder.none,
-                                      ),
-                                      onChanged: (value) {
-                                        simulatedSearch(ancho, largo);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // Botón de búsqueda
-                            Container(
-                              width: largo * 0.06,
-                              height: largo * 0.06,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromARGB(255, 236, 236, 236),
-                              ),
-                              child: Container(
-                                width: largo * 0.06,
-                                height: largo * 0.06,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color.fromARGB(255, 64, 80, 103),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.search),
-                                  color:
-                                      const Color.fromARGB(255, 236, 236, 236),
-                                  onPressed: () {
-                                    simulatedSearch(ancho, largo);
-                                  },
-                                  iconSize: largo * 0.06 * 0.5,
-                                ),
-                              ),
-                            ),
-                          ],
+                          icon: const Icon(Icons.search),
+                          color: const Color.fromARGB(255, 64, 80, 103),
+                          onPressed: () {
+                            setState(() {
+                              _searchFood(
+                                _nameController.text,
+                                typeSelected,
+                                regionSelected,
+                                groupSelected,
+                                nutrientSelected,
+                                operatorSelected,
+                                _valueSelected.text,
+                              );
+                            });
+                          },
+                          iconSize: largo * 0.06 * 0.5,
                         ),
                       ),
+                    ),
 
-                      SizedBox(height: largo * 0.03),
+                    // FONDO DE CAMPO DE BUSQUEDA
+                    Container(
+                      height: largo * 0.055,
+                      width: ancho * 0.65,
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 236, 236, 236),
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            topRight: Radius.circular(10)),
+                      ),
 
-                      // FILTRO DATA_SET
-                      Column(
+                      // TEXTFIELD DE CAMPO DE BUSQUEDA
+                      child: Row(
                         children: [
-                          Container(
-                            width: ancho * 0.8,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: const Text("Data Set"),
-                          ),
-                          OptionSelectorWidget(
-                            hintText: 'Selecciona una opción',
-                            options: const ['Opción 1', 'Opción 2', 'Opción 3'],
-                            onSelected: (selected) {
-                              print('Opción seleccionada: $selected');
-                            },
-                            ancho: ancho * 0.9,
-                            largo: largo * 0.05,
-                            cantOptions: 4,
-                            seeArrow: true,
+                          Expanded(
+                            child: TextField(
+                              controller: _nameController,
+                              maxLines: 1,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                hintText: 'Buscar por nombre...',
+                                hintStyle: TextStyle(
+                                    color: Color.fromARGB(157, 41, 52, 65),
+                                    fontWeight: FontWeight.w400),
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (value) {},
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: largo * 0.03),
+                    ),
 
-                      // FILTRO CATEGORIES
-                      Column(
-                        children: [
-                          Container(
-                            width: ancho * 0.8,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: const Text("Categories"),
+                    SizedBox(
+                      width: ancho * 0.02,
+                    ),
+
+                    // BOTON DE FILTRO
+                    Container(
+                      child: Container(
+                        width: largo * 0.055,
+                        height: largo * 0.055,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(6)),
+                          color: const Color.fromARGB(255, 236, 236, 236),
+                        ),
+                        child: IconButton(
+                          icon: ImageIcon(
+                            AssetImage('lib/assets/icons/filter.png'),
                           ),
-                          OptionSelectorWidget(
-                            hintText: 'Selecciona una opción',
-                            options: const [
-                              'Opción 1',
-                              'Opción 2',
-                              'Opción 3',
-                              'Opción 4',
-                              'Opción 5',
-                              'Opción 6',
-                              'Opción 7',
-                              'Opción 8',
-                              'Opción 9',
-                              'Opción 10',
-                              'Opción 11',
-                              'Opción 12',
-                              'Opción 13',
-                              'Opción 14',
-                              'Opción 15',
-                              'Opción 16',
-                              'Opción 17',
-                              'Opción 18',
-                            ],
-                            onSelected: (selected) {
-                              print('Opción seleccionada: $selected');
-                            },
-                            ancho: ancho * 0.9,
-                            largo: largo * 0.05,
-                            cantOptions: 4,
-                            seeArrow: true,
-                          ),
-                        ],
+                          color: const Color.fromARGB(255, 64, 80, 103),
+                          onPressed: _toggleExpansion,
+                          iconSize: largo * 0.06 * 0.5,
+                        ),
                       ),
-                      SizedBox(height: largo * 0.03),
-
-                      // FILTRO SUB_CATEGORIES
-                      Column(
-                        children: [
-                          Container(
-                            width: ancho * 0.8,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: const Text("Sub Categories"),
-                          ),
-                          OptionSelectorWidget(
-                            hintText: 'Selecciona una opción',
-                            options: const [
-                              'Opción 1',
-                              'Opción 2',
-                              'Opción 3',
-                              'Opción 4',
-                            ],
-                            onSelected: (selected) {
-                              print('Opción seleccionada: $selected');
-                            },
-                            ancho: ancho * 0.9,
-                            largo: largo * 0.05,
-                            cantOptions: 4,
-                            seeArrow: true,
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: largo * 0.03),
-
-                      Container(
-                        width: ancho * 0.8,
-                        height: largo * 0.05,
-                        alignment: AlignmentDirectional.center,
-                        child: const Text("Nutrient Content"),
-                      ),
-                      _buildNutrientContent(ancho, largo),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
+              ),
+
+              //FILTROS DESPLEGABLES
+              Column(
+                children: [
+                  SizeTransition(
+                    sizeFactor: _sizeAnimation,
+                    axisAlignment: -1.0,
+                    child: Container(
+                      width: ancho,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: colorBusqueda,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: largo * 0.02,
+                          ),
+
+                          // FILTRO TIPO DE ALIMENTO
+                          Column(
+                            children: [
+                              Container(
+                                width: ancho * 0.8,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  "Tipo de alimento",
+                                  style: TextStyle(
+                                    color: colorFilterText,
+                                  ),
+                                ),
+                              ),
+                              OptionSelectorWidget(
+                                hintText: 'Selecciona una opción',
+                                options: typeOptions,
+                                onSelected: (selected) {
+                                  final safeSelected = selected ?? '';
+                                  final selectedIndex =
+                                      typeOptions.indexOf(safeSelected);
+                                  if (selectedIndex == 0 ||
+                                      selectedIndex == -1) {
+                                    typeSelected = '';
+                                  } else {
+                                    typeSelected = '$selectedIndex';
+                                  }
+                                },
+                                ancho: ancho * 0.9,
+                                largo: largo * 0.05,
+                                cantOptions: 4,
+                                seeArrow: true,
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(
+                            height: largo * 0.02,
+                          ),
+
+                          // FILTRO REGIONES DE ORIGEN
+                          Column(
+                            children: [
+                              Container(
+                                width: ancho * 0.8,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  "Regiones de origen",
+                                  style: TextStyle(
+                                    color: colorFilterText,
+                                  ),
+                                ),
+                              ),
+                              OptionSelectorWidget(
+                                hintText: 'Selecciona una opción',
+                                options: regionOptions,
+                                onSelected: (selected) {
+                                  final safeSelected = selected ?? '';
+                                  final selectedIndex = regionOptions.indexOf(safeSelected);
+
+                                  if (selectedIndex == 0 || selectedIndex == -1) {
+                                    regionSelected = '';
+                                  } else {
+                                    regionSelected = '${regionIDs[selectedIndex]}';
+                                  }
+                                },
+                                ancho: ancho * 0.9,
+                                largo: largo * 0.05,
+                                cantOptions: 4,
+                                seeArrow: true,
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(
+                            height: largo * 0.02,
+                          ),
+
+                          // FILTRO GRUPO ALIMENTARIO
+                          Column(
+                            children: [
+                              Container(
+                                width: ancho * 0.8,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  "Grupo alimentario",
+                                  style: TextStyle(
+                                    color: colorFilterText,
+                                  ),
+                                ),
+                              ),
+                              OptionSelectorWidget(
+                                hintText: 'Selecciona una opción',
+                                options: groupOptions,
+                                onSelected: (selected) {
+                                  final safeSelected = selected ?? '';
+                                  final selectedIndex =
+                                      groupOptions.indexOf(safeSelected);
+                                  if (selectedIndex == 0 ||
+                                      selectedIndex == -1) {
+                                    groupSelected = '';
+                                  } else {
+                                    groupSelected = '$selectedIndex';
+                                  }
+                                  print(selectedIndex);
+                                },
+                                ancho: ancho * 0.9,
+                                largo: largo * 0.05,
+                                cantOptions: 4,
+                                seeArrow: true,
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(
+                            height: largo * 0.02,
+                          ),
+
+                          Container(
+                            width: ancho * 0.8,
+                            alignment: AlignmentDirectional.center,
+                            child: Text(
+                              "Medicion de nutrientes",
+                              style: TextStyle(
+                                color: colorFilterText,
+                              ),
+                            ),
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+
+                              // SELECTOR DE NUTRIENTE
+                              OptionSelectorWidget(
+                                hintText: 'Seleccionar',
+                                options: nutrientsOptions,
+                                onSelected: (selected) {
+                                  final safeSelected = selected ?? '';
+                                  final selectedIndex = nutrientsOptions.indexOf(safeSelected);
+                                  if (selectedIndex == -1) {
+                                    nutrientSelected = '';
+                                  } else {
+                                    nutrientSelected = '${nutrientsIDs[selectedIndex]}';
+                                  }
+                                },
+                                ancho: ancho * 0.4,
+                                largo: largo * 0.05,
+                                cantOptions: 4,
+                                seeArrow: true,
+                              ),
+
+                              SizedBox(width: ancho * 0.05),
+
+                              // SELECTOR DE COMPARADOR
+                              MatematicSelectorWidget(
+                                hintText: '=',
+                                options: const ['=', '<', '>', '<=', '>=',],
+                                onSelected: (selected) {
+                                  operatorSelected = selected.toString();
+                                  print(operatorSelected);
+                                },
+                                ancho: ancho * 0.15,
+                                largo: largo * 0.05,
+                                cantOptions: 3,
+                                color: const Color.fromARGB(255, 236, 236, 236),
+                                borderColor:
+                                    const Color.fromARGB(255, 185, 185, 185),
+                                seeArrow: false,
+                              ),
+
+                              SizedBox(width: ancho * 0.05),
+
+                              // TEXTFIELD DE VALOR
+                              Container(
+                                height: largo * 0.06,
+                                width: ancho * 0.25,
+                                alignment: AlignmentDirectional.center,
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 214, 226, 218),
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    bottomRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                  ),
+                                  border: Border.all(
+                                    color: const Color.fromARGB(255, 0, 113, 91),
+                                    width: ancho * 0.005,
+                                  ),
+                                ),
+                                child: TextField(
+                                  controller: _valueSelected,
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                                    LengthLimitingTextInputFormatter(8),
+                                  ],
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                    isDense: true,
+                                    hintText: '0',
+                                    hintStyle: TextStyle(
+                                      color: Color.fromARGB(255, 41, 52, 65),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                  onChanged: (value) {
+                                    if (value.isEmpty) {
+                                      _valueSelected.text = "0";
+                                      _valueSelected.selection = TextSelection.fromPosition(
+                                        TextPosition(offset: _valueSelected.text.length),
+                                      );
+                                    } else {
+                                      final doubleValue = double.tryParse(value) ?? 0.0;
+                                      print("Valor ingresado como double: $doubleValue");
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: ancho,
+                    height: largo * 0.04,
+                    decoration: BoxDecoration(
+                      color: colorBusqueda,
+                      border: Border.all(color: colorBusqueda),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
+
         ],
       ),
     );
   }
 
-  void filterTogle() {
-    if (_scrollController.size == minExpand) {
-      _scrollController.animateTo(
-        maxExpand,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+  // INTERACCION CON AL API PARA OBTENER INFORMACION BASICA DE ALIMENTOS POR FILTRO
+  Future<void> _searchFood(String name, String type, String region, String group, String nutrient, String operator, String value) async {
+
+    if(value == ""){
+      value = "0";
+    }
+
+    if (nutrient == ""){
+      operator = "";
+      value = "";
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+
+
+    try {
+      final List<FoodItem> items = await _apiService.getFoodsByFilters(
+          name: name, type: type, region: region, group: group, nutrient: nutrient, operator: operator, value: value);
+
+      setState(() {
+        itemsList = items;
+      });
+
+      _generateCards(
+          MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height,
+          MediaQuery.of(context).padding.top
       );
-    } else {
-      _scrollController.animateTo(
-        minExpand,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+    } catch (e) {
+      print('Error durante la búsqueda: $e');
+      setState(() {
+        itemsList = [];
+        cardsList.clear();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-  Widget _buildNutrientContent(double ancho, double largo) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        OptionSelectorWidget(
-          hintText: 'Nutrient',
-          options: const ['Opción 1', 'Opción 2', 'Opción 3', 'Opción 4'],
-          onSelected: (selected) {
-            print('Opción seleccionada: $selected');
-          },
-          ancho: ancho * 0.4,
-          largo: largo * 0.05,
-          cantOptions: 4,
-          seeArrow: true,
-        ),
-        SizedBox(width: ancho * 0.05),
-        MatematicSelectorWidget(
-          hintText: '=',
-          options: const ['=', '<', '>'],
-          onSelected: (selected) {
-            print('Opción seleccionada: $selected');
-          },
-          ancho: ancho * 0.15,
-          largo: largo * 0.05,
-          cantOptions: 3,
-          color: const Color.fromARGB(255, 236, 236, 236),
-          borderColor: const Color.fromARGB(255, 185, 185, 185),
-          seeArrow: false,
-        ),
-        SizedBox(width: ancho * 0.05),
-        Container(
-          height: largo * 0.06,
-          width: ancho * 0.25,
-          alignment: AlignmentDirectional.center,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 214, 226, 218),
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              topLeft: Radius.circular(10),
-            ),
-            border: Border.all(
-              color: const Color.fromARGB(255, 0, 113, 91),
-              width: ancho * 0.005,
-            ),
-          ),
-          child: TextField(
-            maxLines: 1,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0),
-              isDense: true,
-              hintText: '0',
-              hintStyle: TextStyle(
-                color: Color.fromARGB(255, 41, 52, 65),
-                fontWeight: FontWeight.w400,
-              ),
-              border: InputBorder.none,
-            ),
-            onChanged: (value) {
-              // Lógica para manejar el valor ingresado
-            },
-          ),
-        ),
-      ],
-    );
-  }
 
-  void simulatedSearch(double ancho, double largo) {
-    itemsList.clear();
-    for (int i = 0; i < 6; i++) {
-      itemsList.add(
-          FoodItem(id: i, name: "FOOD " + (i + 1).toString(), compare: false));
+  // OBTENER TODAS LAS REGIONES DE LA DB
+  Future<void> loadRegionOptions() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final Map<String, List<dynamic>> regionsData = await _apiService.getRegions();
+      final List<String> regions = regionsData['names'] as List<String>;
+      final List<int> regionIds = regionsData['ids'] as List<int>;
+
+      setState(() {
+        regionOptions.clear();
+        regionOptions.add('Seleccionar todos');
+        regionOptions.addAll(regions);
+
+        regionIDs.clear();
+        regionIDs.add(-1);
+        regionIDs.addAll(regionIds);
+      });
+    } catch (e) {
+      print('Error al cargar las opciones de regiones: $e');
     }
-    setState(() {});
+    finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
-  void generateCards(double ancho, double largo) {
+  // OBTENER TODOS LOS NUTRIENTES DE LA DB
+  Future<void> loadNutrientsOptions() async {
+    try {
+      final Map<String, List<dynamic>> nutrientsData = await _apiService.getAllNutrients();
+      final List<String> nutrients = nutrientsData['names'] as List<String>;
+      final List<int> nutrientsIds = nutrientsData['ids'] as List<int>;
+      setState(() {
+        nutrientsOptions.clear();
+        nutrientsOptions.addAll(nutrients);
+
+        nutrientsIDs.clear();
+        nutrientsIDs.addAll(nutrientsIds);
+      });
+    } catch (e) {
+      print('Error al cargar los nutrientes: $e');
+    }
+    finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // OBTENER TODAS LOS TIPOS DE LA DB
+  Future<void> loadTypesOptions() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final List<String> regions = await _apiService.getFoodTypes();
+
+      setState(() {
+        typeOptions.clear();
+        typeOptions.add('Seleccionar todos');
+        typeOptions.addAll(regions);
+      });
+    } catch (e) {
+      print('Error al cargar las opciones de tipos: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // OBTENER TODoS LOS GRUPOS DE LA DB
+  Future<void> loadGroupsOptions() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final List<String> groups = await _apiService.getFoodGroups();
+      setState(() {
+        groupOptions.clear();
+        groupOptions.add('Seleccionar todos');
+        groupOptions.addAll(groups);
+      });
+    } catch (e) {
+      print('Error al cargar los grupos alimentarios: $e');
+    }
+    finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // GENERA LAS CARTAS DE ALIMENTOS EN BASE A LA CANTIDAD DE ALIMENTOS EN INTEMS
+  void _generateCards(double ancho, double largo, double extraTop) {
+    largo = largo - extraTop - kBottomNavigationBarHeight;
     cardsList.clear();
-    for (int i = 0; i < itemsList.length; i++) {
-      cardsList.add(FoodCard(
-        ancho: ancho * 0.9,
-        largo: largo * 0.1,
-        data: itemsList[i],
-        compareList: widget.compareList,
+    cardsList.add(Container(
+      height: extraTop + largo*0.08 + largo*0.08 + largo*0.04,
+    ));
+    cardsList.add(SizedBox(
+      height: largo * 0.02,
+    ));
+    for (FoodItem item in itemsList) {
+      cardsList.add(
+        FoodCard(
+          ancho: ancho * 0.9,
+          largo: largo * 0.135,
+          data: item,
+          compareList: widget.compareList,
+        ),
+      );
+      cardsList.add(SizedBox(
+        height: largo * 0.02,
       ));
     }
   }
 
+  // METODO PARA REFREZACART EL ESTADO DE LA VENTANA CUANDO S EVUELVA A INGRESAR A ESTA
   void resfresh() {
     setState(() {});
   }

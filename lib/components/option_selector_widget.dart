@@ -27,6 +27,8 @@ class OptionSelectorWidget extends StatefulWidget {
 
 class _OptionSelectorWidgetState extends State<OptionSelectorWidget> {
   String? selectedOption;
+  Color background = const Color.fromARGB(255, 214, 226, 218);
+  Color theme = const Color.fromARGB(255, 0, 0, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,9 @@ class _OptionSelectorWidgetState extends State<OptionSelectorWidget> {
       width: widget.ancho,
       height: widget.largo,
       decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromARGB(255, 0, 152, 121)),
+        border: Border.all(color: background),
         borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 0, 152, 121),
+        color: background,
       ),
       child: Row(
         children: [
@@ -58,14 +60,14 @@ class _OptionSelectorWidgetState extends State<OptionSelectorWidget> {
                             ),
                             Text(
                               selectedOption ?? widget.hintText,
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(color: theme),
                             ),
                           ],
                         )),
                     Row(
                       children: [
                         if (widget.seeArrow)
-                          Icon(Icons.arrow_drop_down, color: Colors.white),
+                          Icon(Icons.arrow_drop_down, color: theme),
                       ],
                     ),
                   ],
@@ -100,12 +102,11 @@ class _OptionSelectorWidgetState extends State<OptionSelectorWidget> {
             ),
           ),
 
-          // Botón "X" para limpiar la selección
           if (selectedOption != null)
             IconButton(
               icon: Icon(
                 Icons.clear,
-                color: Colors.white,
+                color: theme,
                 size: widget.largo * 0.5,
               ),
               onPressed: () {
