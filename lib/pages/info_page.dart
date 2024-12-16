@@ -84,14 +84,15 @@ class _InfoPageState extends State<InfoPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Bienvenido a",
+                  "Bienvenido a nuestra",
                   style: TextStyles.subtitle,
                 ),
                 Text(
-                  "CAPCHICAL",
+                  "Base de Datos de Composición de Alimentos",
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                      fontSize: 50,
+                    textStyle:  TextStyle(
+                      fontSize: largo*0.045,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 255, 255, 255),
                     ),

@@ -227,7 +227,7 @@ class _FoodPageState extends State<FoodPage> {
                             margin:
                             const EdgeInsets.symmetric(horizontal: 5),
                             width: _currentPage == index ? 10 : 10,
-                            height: 5,
+                            height: 10,
                             decoration: BoxDecoration(
                               color: _currentPage == index
                                   ? const Color.fromARGB(255, 104, 166, 145)
@@ -256,10 +256,22 @@ class _FoodPageState extends State<FoodPage> {
                               // NOMBRE DE ALIMENTO
                               Container(
                                 alignment: Alignment.center,
-                                width: ancho * 0.9,
+                                width: ancho,
                                 height: largo * 0.1,
                                 color: colorBackground,
-                                child: _buildTitle(),
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Container(
+                                    width: ancho*0.9,
+                                    height: largo*0.08,
+                                    padding: EdgeInsets.only(left: ancho*0.1),
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 104, 166, 145),
+                                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(20), topRight: Radius.circular(20)),
+                                    ),
+                                    child: _buildTitle(),
+                                  ),
+                                ),
                               ),
 
                               // SELECTOR DE INFORMACION A MOSTRAR
@@ -704,6 +716,7 @@ class _FoodPageState extends State<FoodPage> {
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               firstPart,
@@ -711,7 +724,7 @@ class _FoodPageState extends State<FoodPage> {
                 textStyle: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               )
             ),
@@ -719,9 +732,9 @@ class _FoodPageState extends State<FoodPage> {
               foodDetails!.code,
                 style: GoogleFonts.lato(
                   textStyle: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color.fromARGB(218, 133, 133, 133),
+                    color: Color.fromARGB(197, 255, 255, 255),
                   ),
                 )
             ),
@@ -804,6 +817,8 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildInfoRow(String label, String value) {
+    double extraTop = MediaQuery.of(context).padding.top;
+    double largo = MediaQuery.of(context).size.height.toDouble() - extraTop;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -811,21 +826,25 @@ class _FoodPageState extends State<FoodPage> {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 117, 117, 117),
-            ),
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(
+                  fontSize: largo * 0.02,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              )
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: Color.fromARGB(255, 174, 174, 174),
-              ),
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                    fontSize: largo * 0.02,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black87,
+                  ),
+                )
             ),
           ),
         ],
@@ -942,19 +961,11 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildNutrientTable(String title, List<NutrientMeasurement> nutrients, double ancho) {
+    double extraTop = MediaQuery.of(context).padding.top;
+    double largo = MediaQuery.of(context).size.height.toDouble() - extraTop;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-        // TITULO DE TABLA
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
 
         const SizedBox(height: 10),
 
@@ -975,37 +986,37 @@ class _FoodPageState extends State<FoodPage> {
                     "Nombre",
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                        fontSize: 13,
+                        fontSize: largo * 0.016,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.black87,
                       ),
-                    ),
+                    )
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     "Unidad",
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: largo * 0.016,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      )
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.only(left: 8.0, top: 8.0),
                   child: Text(
                     "Promedio",
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: largo * 0.016,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      )
                   ),
                 ),
               ],
@@ -1017,21 +1028,39 @@ class _FoodPageState extends State<FoodPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       nutrient.name,
-                      style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: largo * 0.016,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                          ),
+                        )
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       100.toString()+ " "+ nutrient.measurementUnit,
-                      style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: largo * 0.016,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                          ),
+                        )
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       nutrient.average.toStringAsFixed(2),
-                      style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: largo * 0.016,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                          ),
+                        )
                     ),
                   ),
                 ],
@@ -1048,10 +1077,16 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildLangualWidget(double ancho) {
     if (foodDetails == null || foodDetails!.langualCodes.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           "No hay información sobre los códigos Langual.",
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.016,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
         ),
       );
     }
@@ -1064,6 +1099,8 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildLangualCodeTable(String title, List<LangualCode> langualCodes, double ancho) {
+    double extraTop = MediaQuery.of(context).padding.top;
+    double largo = MediaQuery.of(context).size.height.toDouble() - extraTop;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1071,14 +1108,15 @@ class _FoodPageState extends State<FoodPage> {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(
+                fontSize: largo * 0.023,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
           ),
         ),
-
         Table(
           columnWidths: {
             0: FlexColumnWidth(2),
@@ -1097,7 +1135,6 @@ class _FoodPageState extends State<FoodPage> {
                 _buildTableCell("Descripción", isHeader: true),
               ],
             ),
-
             ...langualCodes.expand((langualCode) {
               final List<TableRow> rows = [];
 
@@ -1134,7 +1171,6 @@ class _FoodPageState extends State<FoodPage> {
                   ),
                 );
               }
-
               return rows;
             }).toList(),
           ],
@@ -1157,9 +1193,12 @@ class _FoodPageState extends State<FoodPage> {
         children: [
           Text(
             "$letter\n$rest",
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black,
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(
+                fontSize: MediaQuery.of(context).size.height * 0.016,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
           ),
         ],
@@ -1168,10 +1207,12 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildTableCell(String text, {bool isHeader = false, bool isCategory = false}) {
-    final cellStyle = TextStyle(
-      fontSize: isHeader ? 14 : 13,
-      fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-      color: Colors.black,
+    final cellStyle = GoogleFonts.lato(
+      textStyle: TextStyle(
+        fontSize: isHeader ? MediaQuery.of(context).size.height * 0.016 : MediaQuery.of(context).size.height * 0.016,
+        fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+        color: Colors.black87,
+      ),
     );
 
     return Container(
@@ -1188,13 +1229,17 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
-  // CONSTRUCCION DE INFORMACION GENERAL
+
+  // CONSTRUCCION DE INFORMACION DE REFERENCIAS
   Widget _buildReferences(double ancho) {
     if (foodDetails?.references == null || foodDetails!.references!.isEmpty) {
       return const Center(
         child: Text("Información no disponible."),
       );
     }
+
+    double extraTop = MediaQuery.of(context).padding.top;
+    double largo = MediaQuery.of(context).size.height.toDouble() - extraTop;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1207,12 +1252,42 @@ class _FoodPageState extends State<FoodPage> {
               children: [
                 Text(
                   "Título: ${reference.title}",
-                  style: const TextStyle(fontStyle: FontStyle.italic),
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: largo * 0.02,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black87,
+                      ),
+                    ),
                 ),
-                Text("Tipo: ${reference.type}"),
-                Text("Autores: ${reference.authors.join(", ")}"),
+                SizedBox(height: largo*0.01,),
+                Text("Tipo: ${reference.type}",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: largo * 0.02,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black87,
+                    ),
+                  ),),
+                SizedBox(height: largo*0.01,),
+                Text("Autores: ${reference.authors.join(", ")}",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: largo * 0.02,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black87,
+                    ),
+                  ),),
+                SizedBox(height: largo*0.01,),
                 if (reference.refYear != null)
-                  Text("Año: ${reference.refYear}"),
+                  Text("Año: ${reference.refYear}",
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: largo * 0.02,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black87,
+                      ),
+                    ),),
                 const Divider(
                   color: Colors.grey,
                   thickness: 0.5,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_app/api_service.dart';
-import 'package:food_app/components/food_item.dart';
 import 'package:food_app/components/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -140,8 +139,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
 
               // TITLE CONTAINER
-              GestureDetector( onTap: (){_generateCards(ancho, largo, extraTop);},
-                child: Container(
+              Container(
                   width: ancho,
                   height: largo * 0.08,
                   decoration: BoxDecoration(
@@ -168,23 +166,8 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                         ),
                       ),
 
-                      Container(
-                        height: largo * 0.06,
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          "  app",
-                          style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 255, 255, 255),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   )
-                ),
               ),
 
               // SEARCH BAR

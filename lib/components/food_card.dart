@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/components/food_item.dart';
 import 'package:food_app/components/index.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FoodCard extends StatefulWidget {
   final double ancho;
@@ -73,24 +73,38 @@ class FoodCardState extends State<FoodCard> {
                           ),
 
                           // INFO DEL ALIMENTO
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: widget.ancho * 0.55,
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Code: " + widget.data.code,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          Container(
+                            width: widget.ancho * 0.5,
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.data.commonNameEs.split(',').first,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                      fontSize: widget.largo*0.16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  maxLines: null, // Permite líneas ilimitadas
+                                  softWrap: true, // Ajusta el texto al ancho del contenedor
                                 ),
-                              ),
-                              Container(
-                                width: widget.ancho * 0.5,
-                                alignment: Alignment.centerLeft,
-                                child: Text("ID: " + widget.data.id),
-                              ),
-                            ],
-                          )
+                                Text(
+                                  "Code: " + widget.data.code,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                      fontSize: widget.largo*0.16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  )
+                                ),
+                              ],
+                            )
+                          ),
                         ],
                       ),
                     ),

@@ -217,19 +217,19 @@ class ComparePageState extends State<ComparePage> {
       )
           : Center(
         child: Container(
-          height: largo*0.25,
+          height: largo*0.13,
           width: ancho*0.8,
           decoration: BoxDecoration(
-              color: Color.fromARGB(150, 255, 255, 255),
-              borderRadius: BorderRadius.all(Radius.circular(10))
+              color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.all(Radius.circular(40))
           ),
           alignment: Alignment.center,
           child:  Text(
             "No se selecciono ningun\nalimento para comparar",
             style: GoogleFonts.lato(
               textStyle: TextStyle(
-                fontSize: ancho*0.05,
-                fontWeight: FontWeight.bold,
+                fontSize: ancho*0.04,
+                fontWeight: FontWeight.w500,
                 color: Color.fromARGB(255, 236, 107, 107),
               ),
             ),
@@ -263,18 +263,30 @@ class ComparePageState extends State<ComparePage> {
             TableRow(
               decoration: const BoxDecoration(color: Color.fromARGB(255, 230, 230, 230)),
               children: [
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     "Energía",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                   ),
                 ),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     "Unidad",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: ancho*0.035,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
                   ),
                 ),
                 ...foodDetailsList.map((food) {
@@ -282,7 +294,13 @@ class ComparePageState extends State<ComparePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "${food.code}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   );
                 }),
@@ -295,14 +313,26 @@ class ComparePageState extends State<ComparePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       energy.name,
-                      style: const TextStyle(color: Colors.black),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.normal,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "100 ${energy.measurementUnit}",
-                      style: const TextStyle(color: Colors.black),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.normal,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
                   ...foodDetailsList.map((food) {
@@ -324,7 +354,13 @@ class ComparePageState extends State<ComparePage> {
                         matchingEnergy.nutrientId != -1
                             ? matchingEnergy.average.toStringAsFixed(2)
                             : "-",
-                        style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: ancho*0.035,
+                            fontWeight: FontWeight.normal,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
                       ),
                     );
                   }),
@@ -337,6 +373,7 @@ class ComparePageState extends State<ComparePage> {
       ancho: ancho,
     );
   }
+
   Widget _buildMainNutrientsTable(List<FoodItemDetails> foodDetailsList, double ancho) {
     final uniqueMainNutrients = <int, NutrientMeasurementWithComponents>{};
     for (var food in foodDetailsList) {
@@ -363,18 +400,30 @@ class ComparePageState extends State<ComparePage> {
               TableRow(
                 decoration: const BoxDecoration(color: Color.fromARGB(255, 230, 230, 230)),
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       "Nutriente / Componente",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       "Unidad",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
                   ...foodDetailsList.map((food) {
@@ -382,7 +431,13 @@ class ComparePageState extends State<ComparePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "${food.code}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: ancho*0.035,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
                       ),
                     );
                   }),
@@ -395,14 +450,26 @@ class ComparePageState extends State<ComparePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         mainNutrient.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: ancho*0.035,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         100.toString()+ " "+mainNutrient.measurementUnit,
-                        style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: ancho*0.035,
+                            fontWeight: FontWeight.normal,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
                       ),
                     ),
                     ...foodDetailsList.map((food) {
@@ -426,7 +493,13 @@ class ComparePageState extends State<ComparePage> {
                           matchingNutrient.nutrientId != -1
                               ? matchingNutrient.average.toStringAsFixed(2)
                               : "-",
-                          style: const TextStyle(color: Colors.black),
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontSize: ancho*0.035,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
                         ),
                       );
                     }),
@@ -440,14 +513,26 @@ class ComparePageState extends State<ComparePage> {
                         padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
                         child: Text(
                           "- ${component.name}",
-                          style: const TextStyle(color: Colors.black),
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontSize: ancho*0.035,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           100.toString()+ " "+component.measurementUnit,
-                          style: const TextStyle(color: Colors.black),
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontSize: ancho*0.035,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
                         ),
                       ),
                       ...foodDetailsList.map((food) {
@@ -472,7 +557,13 @@ class ComparePageState extends State<ComparePage> {
                             matchingComponent.nutrientId != -1
                                 ? matchingComponent.average.toStringAsFixed(2)
                                 : "-",
-                            style: const TextStyle(color: Colors.black),
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontSize: ancho*0.035,
+                                fontWeight: FontWeight.normal,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ),
                           ),
                         );
                       }),
@@ -519,20 +610,42 @@ class ComparePageState extends State<ComparePage> {
             TableRow(
               decoration: const BoxDecoration(color: Color.fromARGB(255, 230, 230, 230)),
               children: [
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text("Micronutriente (ID)", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text("Micronutriente (ID)",
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: ancho*0.035,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
+                  ),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text("Unidad", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text("Unidad",
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: ancho*0.035,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
+                  ),
                 ),
                 ...foodDetailsList.map((food) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "${food.code}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   );
                 }),
@@ -545,14 +658,26 @@ class ComparePageState extends State<ComparePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "${micronutrient.name} (${micronutrient.nutrientId})",
-                      style: const TextStyle(color: Colors.black),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.normal,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       100.toString()+ " "+micronutrient.measurementUnit,
-                      style: const TextStyle(color: Colors.black),
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.035,
+                          fontWeight: FontWeight.normal,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
                     ),
                   ),
                   ...foodDetailsList.map((food) {
@@ -575,7 +700,13 @@ class ComparePageState extends State<ComparePage> {
                         (matchingMicronutrient != null && matchingMicronutrient.nutrientId != -1)
                             ? matchingMicronutrient.average.toStringAsFixed(2)
                             : "-",
-                        style: const TextStyle(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: ancho*0.035,
+                            fontWeight: FontWeight.normal,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
                       ),
                     );
                   }),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DesplegableWidget extends StatefulWidget {
   final String title;
@@ -99,10 +100,13 @@ class _DesplegableWidgetState extends State<DesplegableWidget>
                 ),
                 Text(
                   widget.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: widget.ancho * 0.04,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    )
                 ),
               ],
             ),
