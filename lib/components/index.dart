@@ -6,3 +6,4 @@ export 'food_Item_details.dart';
 export 'food_item.dart';
 export 'matematic_selector_widget.dart';
 export 'option_selector_widget.dart';
+export 'compare_capacity_circle.dart';

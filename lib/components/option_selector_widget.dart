@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OptionSelectorWidget extends StatefulWidget {
   final String hintText;
@@ -40,81 +41,132 @@ class _OptionSelectorWidgetState extends State<OptionSelectorWidget> {
         borderRadius: BorderRadius.circular(10),
         color: background,
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton2<String>(
-                barrierColor: const Color.fromARGB(52, 0, 0, 0),
-                value: selectedOption,
-                isExpanded: true,
-                customButton: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: widget.ancho * 0.05,
-                            ),
-                            Text(
-                              selectedOption ?? widget.hintText,
-                              style: TextStyle(color: theme),
-                            ),
-                          ],
-                        )),
-                    Row(
+          /// Dropdown personalizado (texto y flecha)
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    barrierColor: const Color.fromARGB(52, 0, 0, 0),
+                    value: selectedOption,
+                    isExpanded: true,
+                    customButton: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (widget.seeArrow)
-                          Icon(Icons.arrow_drop_down, color: theme),
+                        Container(
+                          width: widget.ancho - (widget.largo * 2 + 2),
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: widget.ancho * 0.05, // Espacio inicial
+                              ),
+                              Expanded(
+                                child: Text(
+                                  selectedOption ?? widget.hintText,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                      fontSize: widget.largo * 0.35,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: widget.largo,
+                          height: widget.largo,
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (widget.seeArrow)
+                                Icon(Icons.arrow_drop_down, color: theme),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ],
-                ),
-                items: widget.options.map((String option) {
-                  return DropdownMenuItem<String>(
-                    value: option,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(left: widget.ancho * 0.05),
-                      height: widget.largo * 1.5,
-                      child: Text(option),
+                    items: widget.options.map((String option) {
+                      final isSelected = option == selectedOption;
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        enabled: !isSelected, // Bloquea la opción si está seleccionada
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: widget.ancho * 0.05),
+                          height: widget.largo * 1.5,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Colors.grey.withOpacity(0.3) // Fondo más oscuro si está seleccionado
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            option,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontSize: widget.largo * 0.35,
+                                fontWeight: FontWeight.normal,
+                                color: isSelected ? Colors.grey : Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedOption = newValue;
+                      });
+                      widget.onSelected(newValue);
+                    },
+                    dropdownStyleData: DropdownStyleData(
+                      padding: const EdgeInsets.all(0),
+                      maxHeight: widget.largo * widget.cantOptions,
+                      offset: const Offset(0, 0),
                     ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedOption = newValue;
-                  });
-                  widget.onSelected(newValue);
-                },
-                dropdownStyleData: DropdownStyleData(
-                  padding: const EdgeInsets.all(0),
-                  maxHeight: widget.largo * widget.cantOptions,
-                  offset: const Offset(0, 0),
-                ),
-                menuItemStyleData: MenuItemStyleData(
-                  height: widget.largo,
-                  padding: const EdgeInsets.all(0),
+                    menuItemStyleData: MenuItemStyleData(
+                      height: widget.largo,
+                      padding: const EdgeInsets.all(0),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
 
           if (selectedOption != null)
-            IconButton(
-              icon: Icon(
-                Icons.clear,
-                color: theme,
-                size: widget.largo * 0.5,
+            Positioned(
+              right: widget.largo,
+              top: 0,
+              bottom: 0,
+              child: Container(
+                width: widget.largo,
+                height: widget.largo,
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: theme,
+                    size: widget.largo * 0.5,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedOption = null;
+                    });
+                    widget.onSelected(null);
+                  },
+                ),
               ),
-              onPressed: () {
-                setState(() {
-                  selectedOption = null;
-                });
-                widget.onSelected(null);
-              },
             ),
         ],
       ),

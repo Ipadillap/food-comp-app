@@ -338,7 +338,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   }
                                 },
                                 ancho: ancho * 0.9,
-                                largo: largo * 0.05,
+                                largo: largo * 0.055,
                                 cantOptions: 4,
                                 seeArrow: true,
                               ),
@@ -376,7 +376,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   }
                                 },
                                 ancho: ancho * 0.9,
-                                largo: largo * 0.05,
+                                largo: largo * 0.055,
                                 cantOptions: 4,
                                 seeArrow: true,
                               ),
@@ -416,7 +416,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   print(selectedIndex);
                                 },
                                 ancho: ancho * 0.9,
-                                largo: largo * 0.05,
+                                largo: largo * 0.055,
                                 cantOptions: 4,
                                 seeArrow: true,
                               ),
@@ -438,102 +438,101 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                             ),
                           ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                          Container(
+                            width: ancho*0.9,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-                              // SELECTOR DE NUTRIENTE
-                              OptionSelectorWidget(
-                                hintText: 'Seleccionar',
-                                options: nutrientsOptions,
-                                onSelected: (selected) {
-                                  final safeSelected = selected ?? '';
-                                  final selectedIndex = nutrientsOptions.indexOf(safeSelected);
-                                  if (selectedIndex == -1) {
-                                    nutrientSelected = '';
-                                  } else {
-                                    nutrientSelected = '${nutrientsIDs[selectedIndex]}';
-                                  }
-                                },
-                                ancho: ancho * 0.4,
-                                largo: largo * 0.05,
-                                cantOptions: 4,
-                                seeArrow: true,
-                              ),
-
-                              SizedBox(width: ancho * 0.05),
-
-                              // SELECTOR DE COMPARADOR
-                              MatematicSelectorWidget(
-                                hintText: '=',
-                                options: const ['=', '<', '>', '<=', '>=',],
-                                onSelected: (selected) {
-                                  operatorSelected = selected.toString();
-                                  print(operatorSelected);
-                                },
-                                ancho: ancho * 0.15,
-                                largo: largo * 0.05,
-                                cantOptions: 3,
-                                color: const Color.fromARGB(255, 236, 236, 236),
-                                borderColor:
-                                    const Color.fromARGB(255, 185, 185, 185),
-                                seeArrow: false,
-                              ),
-
-                              SizedBox(width: ancho * 0.05),
-
-                              // TEXTFIELD DE VALOR
-                              Container(
-                                height: largo * 0.06,
-                                width: ancho * 0.25,
-                                alignment: AlignmentDirectional.center,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 214, 226, 218),
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  border: Border.all(
-                                    color: const Color.fromARGB(255, 0, 113, 91),
-                                    width: ancho * 0.005,
-                                  ),
-                                ),
-                                child: TextField(
-                                  controller: _valueSelected,
-                                  maxLines: 1,
-                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                                    LengthLimitingTextInputFormatter(8),
-                                  ],
-                                  textAlign: TextAlign.center,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                    isDense: true,
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                      color: Color.fromARGB(255, 41, 52, 65),
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (value) {
-                                    if (value.isEmpty) {
-                                      _valueSelected.text = "0";
-                                      _valueSelected.selection = TextSelection.fromPosition(
-                                        TextPosition(offset: _valueSelected.text.length),
-                                      );
+                                // SELECTOR DE NUTRIENTE
+                                OptionSelectorWidget(
+                                  hintText: 'Seleccionar',
+                                  options: nutrientsOptions,
+                                  onSelected: (selected) {
+                                    final safeSelected = selected ?? '';
+                                    final selectedIndex = nutrientsOptions.indexOf(safeSelected);
+                                    if (selectedIndex == -1) {
+                                      nutrientSelected = '';
                                     } else {
-                                      final doubleValue = double.tryParse(value) ?? 0.0;
-                                      print("Valor ingresado como double: $doubleValue");
+                                      nutrientSelected = '${nutrientsIDs[selectedIndex]}';
                                     }
                                   },
+                                  ancho: ancho * 0.45,
+                                  largo: largo * 0.055,
+                                  cantOptions: 4,
+                                  seeArrow: true,
                                 ),
-                              ),
-                            ],
-                          ),
+
+                                // SELECTOR DE COMPARADOR
+                                MatematicSelectorWidget(
+                                  hintText: '=',
+                                  options: const ['=', '<', '>', '<=', '>=',],
+                                  onSelected: (selected) {
+                                    operatorSelected = selected.toString();
+                                    print(operatorSelected);
+                                  },
+                                  ancho: ancho * 0.15,
+                                  largo: largo * 0.05,
+                                  cantOptions: 3,
+                                  color: const Color.fromARGB(255, 236, 236, 236),
+                                  borderColor:
+                                  const Color.fromARGB(255, 185, 185, 185),
+                                  seeArrow: false,
+                                ),
+
+                                // TEXTFIELD DE VALOR
+                                Container(
+                                  height: largo * 0.06,
+                                  width: ancho * 0.25,
+                                  alignment: AlignmentDirectional.center,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 214, 226, 218),
+                                    borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    ),
+                                    border: Border.all(
+                                      color: const Color.fromARGB(255, 0, 113, 91),
+                                      width: ancho * 0.005,
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    controller: _valueSelected,
+                                    maxLines: 1,
+                                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                                      LengthLimitingTextInputFormatter(8),
+                                    ],
+                                    textAlign: TextAlign.center,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                      isDense: true,
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                        color: Color.fromARGB(255, 41, 52, 65),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    onChanged: (value) {
+                                      if (value.isEmpty) {
+                                        _valueSelected.text = "0";
+                                        _valueSelected.selection = TextSelection.fromPosition(
+                                          TextPosition(offset: _valueSelected.text.length),
+                                        );
+                                      } else {
+                                        final doubleValue = double.tryParse(value) ?? 0.0;
+                                        print("Valor ingresado como double: $doubleValue");
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -703,16 +702,26 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
   }
 
-  // GENERA LAS CARTAS DE ALIMENTOS EN BASE A LA CANTIDAD DE ALIMENTOS EN INTEMS
+// GENERA LAS CARTAS DE ALIMENTOS EN BASE A LA CANTIDAD DE ALIMENTOS EN ITEMS
   void _generateCards(double ancho, double largo, double extraTop) {
     largo = largo - extraTop - kBottomNavigationBarHeight;
     cardsList.clear();
+
     cardsList.add(Container(
-      height: extraTop + largo*0.08 + largo*0.08 + largo*0.04,
+      height: extraTop + largo * 0.08 + largo * 0.08 + largo * 0.04,
     ));
     cardsList.add(SizedBox(
       height: largo * 0.02,
     ));
+
+    for (FoodItem item in itemsList) {
+      final bool alreadyInCompareList = widget.compareList.any((element) => element.code == item.code);
+      if (alreadyInCompareList && !item.compare) {
+        item.changeState();
+        print("food encontrado");
+      }
+    }
+
     for (FoodItem item in itemsList) {
       cardsList.add(
         FoodCard(

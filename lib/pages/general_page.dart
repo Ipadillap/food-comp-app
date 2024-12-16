@@ -52,7 +52,6 @@ class _GeneralPageScreenState extends State<GeneralPage> {
 
   void updateQuantity(int newQuantity) {
     setState(() {
-      print(newQuantity.toString());
       quantityToCompare = newQuantity;
     });
   }
@@ -60,7 +59,7 @@ class _GeneralPageScreenState extends State<GeneralPage> {
   @override
   void initState() {
     super.initState();
-    _comparePage = ComparePage(key: comparePageKey, compareList: compareList);
+    _comparePage = ComparePage(key: comparePageKey, compareList: compareList, quantityToCompare: getQuantity);
     _searchPage = SearchPage(key: searchPageKey, compareList: compareList, quantityToCompare: getQuantity, onQuantityChanged: updateQuantity,);
     _screens = <Widget>[
       _screenTwo,
@@ -90,17 +89,17 @@ class _GeneralPageScreenState extends State<GeneralPage> {
           ),
           BottomNavigationBarItem(
             icon: Stack(
-              clipBehavior: Clip.none, // Permite que los hijos sobresalgan
+              clipBehavior: Clip.none,
               children: [
-                 Icon(Icons.compare_arrows), // Ícono base
+                 Icon(Icons.compare_arrows),
                 Positioned(
-                  right: -15, // Posición ajustada respecto al ícono
+                  right: -15,
                   top: -6,
                   child: Container(
                     height: 20,
                     width: 20,
                     decoration: BoxDecoration(
-                      color: Colors.redAccent,
+                      color: Color.fromARGB(255, 239, 79, 79),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     alignment: Alignment.center,

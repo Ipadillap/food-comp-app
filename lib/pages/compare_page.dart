@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:food_app/components/food_Item_details.dart';
 import 'package:food_app/components/food_item.dart';
@@ -8,10 +9,12 @@ import 'package:food_app/components/desplegable_widget.dart';
 
 class ComparePage extends StatefulWidget {
   final List<FoodItem> compareList;
+  final Function() quantityToCompare;
 
   ComparePage({
     Key? key,
     required this.compareList,
+    required this.quantityToCompare,
   }) : super(key: key);
 
   @override
@@ -21,6 +24,7 @@ class ComparePage extends StatefulWidget {
 class ComparePageState extends State<ComparePage> {
   final ApiService _apiService = ApiService();
   bool _isLoading = true;
+  Widget capacity = Container();
 
   List<List<String>> data = [];
 
@@ -39,7 +43,11 @@ class ComparePageState extends State<ComparePage> {
         }
       }
       setState(() {
-        print(compareFoods.length.toString());
+        capacity = CompareCapacityCircle(
+            ancho: (MediaQuery.of(context).size.height.toDouble() - kBottomNavigationBarHeight) * 0.2,
+            current: widget.quantityToCompare(),
+            maxCapacity: 10
+        );
         _isLoading = false;
       });
     } catch (e) {
@@ -60,7 +68,7 @@ class ComparePageState extends State<ComparePage> {
   Widget build(BuildContext context) {
     double ancho = MediaQuery.of(context).size.width.toDouble();
     double largo = MediaQuery.of(context).size.height.toDouble() - kBottomNavigationBarHeight;
-    Color colorBackground = const Color.fromARGB(255, 170, 204, 198);
+    Color colorBackground = const Color.fromARGB(255,104, 166, 145);
     Color colorInfoZone = const Color.fromARGB(255, 255, 255, 255);
     Color colorSecondary = const Color.fromARGB(255, 219, 83, 117);
     return Container(
@@ -70,16 +78,55 @@ class ComparePageState extends State<ComparePage> {
       alignment: AlignmentDirectional.center,
       child: _isLoading
           ? const Center(
-        child: CircularProgressIndicator(),
+        child: SizedBox(
+          width: 100,
+          height: 100,
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 5,
+          ),
+        ),
       )
           : widget.compareList.isNotEmpty
           ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+
+          // CONTAINER CON CANTIDAD DE ALIMENTO SIENDO COMPARADOS Y SU LIMITE
+          Container(
+            height: largo*0.3,
+            width: ancho,
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: largo*0.25,
+                width: ancho*0.8,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(90, 0, 0, 0),
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                child: Row(
+                  children: [
+                    capacity,
+                    Text(
+                      "Alimentos\nSeleccionados",
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontSize: ancho*0.05,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           Stack(
             alignment: Alignment.topCenter,
             children: [
-
               // CONTAINER BASE Y TABLAS DE COMPARACIONES
               Container(
                 height: largo*0.65,
@@ -147,7 +194,7 @@ class ComparePageState extends State<ComparePage> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        "Lista de comparación",
+                        "Tablas de comparación",
                         style: GoogleFonts.lato(
                           textStyle: const TextStyle(
                             fontSize: 20,
@@ -168,10 +215,25 @@ class ComparePageState extends State<ComparePage> {
 
         ],
       )
-          : const Center(
-        child: Text(
-          "No se pudo obtener la información del alimento.",
-          style: TextStyle(color: Colors.red),
+          : Center(
+        child: Container(
+          height: largo*0.25,
+          width: ancho*0.8,
+          decoration: BoxDecoration(
+              color: Color.fromARGB(150, 255, 255, 255),
+              borderRadius: BorderRadius.all(Radius.circular(10))
+          ),
+          alignment: Alignment.center,
+          child:  Text(
+            "No se selecciono ningun\nalimento para comparar",
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(
+                fontSize: ancho*0.05,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 236, 107, 107),
+              ),
+            ),
+          ),
         ),
       ),
     );
