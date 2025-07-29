@@ -67,6 +67,8 @@ flutter:
     - lib\assets\icons\diet_food.png
     - lib\assets\icons\filter.png
     - lib\assets\images\fondo.jpg
+    - lib/src/theme/
+    - lib/src/constants/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

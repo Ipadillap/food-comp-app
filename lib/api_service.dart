@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:food_app/components/food_Item_details.dart';
-import 'package:food_app/components/food_item.dart';
+import 'package:food_app/widgets/food_Item_details.dart';
+import 'package:food_app/widgets/food_item.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
