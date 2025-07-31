@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:food_app/src/theme/app_text_styles.dart';
 import 'package:food_app/src/theme/app_themes.dart';
 import 'cards/card_1.dart';
+import 'cards/card_2.dart';
+import 'cards/card_3.dart';
+import 'cards/card_4.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});
@@ -156,7 +159,9 @@ class _InfoPageState extends State<InfoPage> {
                   },
                   children: [
                     Center(child: Card1(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
-                    Center(child: Card1(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
+                    Center(child: Card2(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
+                    Center(child: Card3(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
+                    Center(child: Card4(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
                   ],
                 ),
               ),

@@ -23,4 +23,14 @@ class AppTextStyles {
       ),
     );
   }
+
+  static TextStyle body(double alto, {Color? color}) {
+    return GoogleFonts.lato(
+      textStyle: TextStyle(
+        fontSize: alto * 0.021,
+        fontWeight: FontWeight.normal,
+        color: const Color(0xFF222222),
+      ),
+    );
+  }
 }

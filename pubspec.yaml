@@ -67,6 +67,7 @@ flutter:
     - lib\assets\icons\diet_food.png
     - lib\assets\icons\filter.png
     - lib\assets\images\fondo.jpg
+    - lib\assets\images\background_capchical.jpg
     - lib/src/theme/
     - lib/src/constants/
 
