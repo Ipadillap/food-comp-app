@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/src/screens/info_page/info_page.dart';
+import 'package:food_app/src/screens/info_page.dart';
 
 class GeneralPage extends StatefulWidget {
   const GeneralPage({super.key});
@@ -18,7 +18,7 @@ class _GeneralPageScreenState extends State<GeneralPage> {
     super.initState();
     _screens = <Widget>[
       // Ventana de informaciones
-      InfoPage(),
+      const InfoPage(),
 
       // Ventana de alimentos
       Container(
@@ -51,16 +51,13 @@ class _GeneralPageScreenState extends State<GeneralPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Redimencion de widgets al activarse el teclado
       resizeToAvoidBottomInset: false,
 
-      //  Pila de widgets donde solo uno es visible
       body: IndexedStack(
         index: _selectedIndex,
         children: _screens,
       ),
 
-      //  NavigationBar que determina el body actual
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         items: const <BottomNavigationBarItem>[

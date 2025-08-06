@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/src/theme/app_text_styles.dart';
 import 'package:food_app/src/theme/app_themes.dart';
-import 'cards/card_1.dart';
-import 'cards/card_2.dart';
-import 'cards/card_3.dart';
-import 'cards/card_4.dart';
+import 'package:food_app/src/widgets/cards/card_1.dart';
+import 'package:food_app/src/widgets/cards/card_2.dart';
+import 'package:food_app/src/widgets/cards/card_3.dart';
+import 'package:food_app/src/widgets/cards/card_4.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});

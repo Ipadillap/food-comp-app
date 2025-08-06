@@ -2,25 +2,27 @@
 class Assets {
   Assets._();
 
-  static const String cardsCard1 = 'lib/src/screens/info_page/cards/card_1.dart';
-  static const String cardsCard2 = 'lib/src/screens/info_page/cards/card_2.dart';
-  static const String cardsCard3 = 'lib/src/screens/info_page/cards/card_3.dart';
-  static const String cardsCard4 = 'lib/src/screens/info_page/cards/card_4.dart';
+  static const String cardsCard1 = 'lib/src/widgets/cards/card_1.dart';
+  static const String cardsCard2 = 'lib/src/widgets/cards/card_2.dart';
+  static const String cardsCard3 = 'lib/src/widgets/cards/card_3.dart';
+  static const String cardsCard4 = 'lib/src/widgets/cards/card_4.dart';
   static const String constantsInfoString = 'lib/src/constants/info_string.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String iconsDietFood = 'lib/assets/icons/diet_food.png';
   static const String iconsFilter = 'lib/assets/icons/filter.png';
   static const String imagesBackgroundCapchical = 'lib/assets/images/background_capchical.jpg';
   static const String imagesFondo = 'lib/assets/images/fondo.jpg';
-  static const String infoPageInfoPage = 'lib/src/screens/info_page/info_page.dart';
   static const String libApiService = 'lib/api_service.dart';
   static const String libMain = 'lib/main.dart';
   static const String libScreensGeneralPage = 'lib/screens/general_page.dart';
+  static const String libScreensInfoPage = 'lib/screens/info_page.dart';
+  static const String modelsFoodDetails = 'lib/src/models/food_details.dart';
   static const String screensComparePage = 'lib/screens/compare_page.dart';
   static const String screensFoodPage = 'lib/screens/food_page.dart';
   static const String screensGeneralPage = 'lib/src/screens/general_page.dart';
-  static const String screensInfoPage = 'lib/screens/info_page.dart';
+  static const String screensInfoPage = 'lib/src/screens/info_page.dart';
   static const String screensSearchPage = 'lib/screens/search_page.dart';
+  static const String servicesApiService = 'lib/src/services/api_service.dart';
   static const String themeAppColors = 'lib/src/theme/app_colors.dart';
   static const String themeAppSizes = 'lib/src/theme/app_sizes.dart';
   static const String themeAppTextStyles = 'lib/src/theme/app_text_styles.dart';
