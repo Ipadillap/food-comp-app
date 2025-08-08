@@ -37,6 +37,7 @@ class _InfoPageState extends State<InfoPage> {
     final circleRadius= largo*0.33 / 2;
 
     final topZoneHeight = alto * 0.45;
+    final bottomZoneHeight = alto * 0.45;
 
     return Scaffold(
       backgroundColor: AppTheme.colors.surface,
@@ -51,12 +52,6 @@ class _InfoPageState extends State<InfoPage> {
           Stack(
             alignment: Alignment.topCenter,
             children: [
-              Container(
-                height: topZoneHeight,
-                width: largo,
-                color: Colors.red,
-              ),
-
               // Top zone
               Column(
                 children: [
@@ -100,10 +95,57 @@ class _InfoPageState extends State<InfoPage> {
                     ],
                   ),
 
-                  
-
                 ],
               ),
+
+              // Picture zone
+              Column(
+                children: [
+                  SizedBox(
+                    width: largo,
+                    height: topZoneHeight - circleRadius*1.35,
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        width: circleRadius * 2,
+                        height: circleRadius,
+                        color: AppTheme.colors.primary,
+                      ),
+                      Container(
+                        width: circleRadius * 2,
+                        height: circleRadius * 2,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors.surface,
+                          shape: BoxShape.circle,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    width: largo,
+                    height: topZoneHeight - circleRadius,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: largo * 0.02,
+                      ),
+                      Image.asset(
+                        'lib/assets/icons/diet_food.png',
+                        scale: largo * 0.014,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+
+
             ],
           ),
         ],
