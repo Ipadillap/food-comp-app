@@ -36,161 +36,78 @@ class _InfoPageState extends State<InfoPage> {
     const borderRadius = 30.0;
     final circleRadius= largo*0.33 / 2;
 
+    final topZoneHeight = alto * 0.45;
+
     return Scaffold(
       backgroundColor: AppTheme.colors.surface,
-      body: Stack(
-        alignment: Alignment.topCenter,
+      body: Column(
         children: [
-          // Top zone
-          Column(
-            children: [
-              Container(
-                width: largo,
-                height: extraTop,
-                color: AppTheme.colors.primary,
-              ),
-
-              Container(
-                width: largo,
-                height: alto * 0.45 - circleRadius,
-                color: AppTheme.colors.primary,
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(subTitle,style: AppTextStyles.subTitle(alto)),
-                    Text(title,style: AppTextStyles.title(alto), textAlign: TextAlign.center,)
-                  ],
-                ),
-              ),
-
-              Row(
-                children: [
-                  Container(
-                    width: largo/2 -circleRadius,
-                    height: circleRadius,
-                    decoration: BoxDecoration(
-                        color:AppTheme.colors.primary,
-                        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
-                    ),
-                  ),
-                  Container(
-                    width: 2 * circleRadius,
-                    height: circleRadius,
-                    color: AppTheme.colors.surface,
-                  ),
-                  Container(
-                    width: largo/2 -circleRadius,
-                    height: circleRadius,
-                    decoration: BoxDecoration(
-                      color:AppTheme.colors.primary,
-                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
-                    ),
-                  ),
-                ],
-              ),
-
-            ],
+          Container(
+            width: largo,
+            height: extraTop,
+            color: AppTheme.colors.primary,
           ),
 
-          // Circle zone
-          Column(
+          Stack(
+            alignment: Alignment.topCenter,
             children: [
-              SizedBox(
+              Container(
+                height: topZoneHeight,
                 width: largo,
-                height: extraTop + alto * 0.42 - circleRadius,
+                color: Colors.red,
               ),
-              Stack(
+
+              // Top zone
+              Column(
                 children: [
                   Container(
-                    width: circleRadius * 2,
-                    height: circleRadius,
+                    width: largo,
+                    height: topZoneHeight - circleRadius,
                     color: AppTheme.colors.primary,
-                  ),
-                  Container(
-                    width: circleRadius * 2,
-                    height: circleRadius * 2,
-                    decoration: BoxDecoration(
-                      color: AppTheme.colors.surface,
-                      shape: BoxShape.circle,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(subTitle,style: AppTextStyles.subTitle(alto)),
+                        Text(title,style: AppTextStyles.title(alto), textAlign: TextAlign.center,)
+                      ],
                     ),
-                  )
-                ],
-              )
-            ],
-          ),
-
-          // Picture
-          Column(
-            children: [
-              SizedBox(
-                width: largo,
-                height: extraTop + alto * 0.45 - circleRadius,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: largo*0.02,
                   ),
-                  Image.asset(
-                    'lib/assets/icons/diet_food.png',
-                    scale: largo * 0.014,
-                  ),
-                ],
-              )
-            ],
-          ),
 
-          // Bottom zone
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: largo,
-                height: (alto * 0.55 - circleRadius) * 0.8,
-                child: PageView(
-                  controller: _pageController,
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (int index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  children: [
-                    Center(child: Card1(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
-                    Center(child: Card2(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
-                    Center(child: Card3(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
-                    Center(child: Card4(width: largo, height: (alto * 0.55 - circleRadius) * 0.8),),
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                width: largo,
-                height: alto*0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: _currentPage == index
-                            ? AppTheme.colors.primary
-                            : AppTheme.colors.primaryLight,
-                        borderRadius: BorderRadius.circular(50),
+                  Row(
+                    children: [
+                      Container(
+                        width: largo/2 -circleRadius,
+                        height: circleRadius,
+                        decoration: BoxDecoration(
+                            color:AppTheme.colors.primary,
+                            borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
+                        ),
                       ),
-                    );
-                  }),
-                ),
-              )
+                      Container(
+                        width: 2 * circleRadius,
+                        height: circleRadius,
+                        color: AppTheme.colors.surface,
+                      ),
+                      Container(
+                        width: largo/2 -circleRadius,
+                        height: circleRadius,
+                        decoration: BoxDecoration(
+                            color:AppTheme.colors.primary,
+                            borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  
+
+                ],
+              ),
             ],
           ),
         ],
-      ),
+      )
     );
   }
 }
