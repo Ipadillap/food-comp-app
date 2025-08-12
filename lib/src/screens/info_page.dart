@@ -101,7 +101,97 @@ class _InfoPageState extends State<InfoPage> {
                   )
                 ),
 
+                // Picture zone
+                  // Background with primary color
+                FractionallySizedBox(
+                    widthFactor: 1,
+                    heightFactor: topZoneFactor*0.9,
+                    child: Column(
+                      children: [
+                        const Expanded(flex: 8, child: SizedBox()),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:AppTheme.colors.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                ),
 
+                  // Circle with surface color
+                FractionallySizedBox(
+                  widthFactor: 1,
+                  heightFactor: topZoneFactor * 1.82,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Expanded(flex: 9, child: SizedBox()),
+
+                            Expanded(
+                              flex: 8, child: Container(
+                              decoration: BoxDecoration(
+                                  color:AppTheme.colors.surface,
+                                  shape: BoxShape.circle
+                              ),
+                            ),),
+
+                            const Expanded(flex: 9, child: SizedBox()),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ),
+
+                  // Picture
+                FractionallySizedBox(
+                    widthFactor: 1,
+                    heightFactor: topZoneFactor * 1.84,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Expanded(flex: 9, child: SizedBox()),
+
+                              Expanded(
+                                flex: 8, child: Container(
+                                  decoration: BoxDecoration(
+                                      color:AppTheme.colors.surface,
+                                      shape: BoxShape.circle
+                                  ),
+                                child: Row(
+                                  children: [
+                                    const Expanded(flex: 1 , child: SizedBox()),
+                                    Expanded(
+                                      flex: 13,
+                                      child: Image.asset(
+                                      'lib/assets/icons/diet_food.png',
+                                      scale: largo * 0.015,
+                                    ),)
+                                  ],
+                                )
+                              ),
+                              ),
+
+                              const Expanded(flex: 9, child: SizedBox()),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                )
 
               ],
             ),
