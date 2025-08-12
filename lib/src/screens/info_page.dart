@@ -33,7 +33,6 @@ class _InfoPageState extends State<InfoPage> {
     final largo = MediaQuery.of(context).size.width;
     final alto = MediaQuery.of(context).size.height - kBottomNavigationBarHeight - extraTop;
 
-    const topZoneFactor = 0.45;
 
     return Scaffold(
       backgroundColor: AppTheme.colors.surface,
@@ -51,7 +50,7 @@ class _InfoPageState extends State<InfoPage> {
                 // Top zone
                 FractionallySizedBox(
                   widthFactor: 1,
-                  heightFactor: topZoneFactor,
+                  heightFactor: 0.45,
                   child: Column(
                     children: [
                       Expanded(
@@ -101,11 +100,12 @@ class _InfoPageState extends State<InfoPage> {
                   )
                 ),
 
+
                 // Picture zone
                   // Background with primary color
                 FractionallySizedBox(
                     widthFactor: 1,
-                    heightFactor: topZoneFactor*0.9,
+                    heightFactor: 0.4,
                     child: Column(
                       children: [
                         const Expanded(flex: 8, child: SizedBox()),
@@ -130,7 +130,7 @@ class _InfoPageState extends State<InfoPage> {
                   // Circle with surface color
                 FractionallySizedBox(
                   widthFactor: 1,
-                  heightFactor: topZoneFactor * 1.82,
+                  heightFactor: 0.82,
                   child: Column(
                     children: [
                       Expanded(
@@ -157,7 +157,7 @@ class _InfoPageState extends State<InfoPage> {
                   // Picture
                 FractionallySizedBox(
                     widthFactor: 1,
-                    heightFactor: topZoneFactor * 1.84,
+                    heightFactor: 0.83,
                     child: Column(
                       children: [
                         Expanded(
@@ -191,8 +191,21 @@ class _InfoPageState extends State<InfoPage> {
                         ),
                       ],
                     )
-                )
+                ),
 
+
+                // Cards zone
+                Column(
+                  children: [
+                    const Spacer(flex: 49),
+                    Expanded(
+                      flex: 55,
+                      child: Container(
+                        color: Colors.red,
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           )
