@@ -33,121 +33,79 @@ class _InfoPageState extends State<InfoPage> {
     final largo = MediaQuery.of(context).size.width;
     final alto = MediaQuery.of(context).size.height - kBottomNavigationBarHeight - extraTop;
 
-    const borderRadius = 30.0;
-    final circleRadius= largo*0.33 / 2;
-
-    final topZoneHeight = alto * 0.45;
-    final bottomZoneHeight = alto * 0.45;
+    const topZoneFactor = 0.45;
 
     return Scaffold(
       backgroundColor: AppTheme.colors.surface,
       body: Column(
         children: [
           Container(
-            width: largo,
             height: extraTop,
             color: AppTheme.colors.primary,
           ),
 
-          Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              // Top zone
-              Column(
-                children: [
-                  Container(
-                    width: largo,
-                    height: topZoneHeight - circleRadius,
-                    color: AppTheme.colors.primary,
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(subTitle,style: AppTextStyles.subTitle(alto)),
-                        Text(title,style: AppTextStyles.title(alto), textAlign: TextAlign.center,)
-                      ],
-                    ),
-                  ),
+          Expanded(
+            child: Stack(
+              children: [
 
-                  Row(
+                // Top zone
+                FractionallySizedBox(
+                  widthFactor: 1,
+                  heightFactor: topZoneFactor,
+                  child: Column(
                     children: [
-                      Container(
-                        width: largo/2 -circleRadius,
-                        height: circleRadius,
-                        decoration: BoxDecoration(
-                            color:AppTheme.colors.primary,
-                            borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
+                      Expanded(
+                        flex: 8,
+                        child: Container(
+                          color: AppTheme.colors.primary,
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(subTitle,style: AppTextStyles.subTitle(alto)),
+                              Text(title,style: AppTextStyles.title(alto), textAlign: TextAlign.center,)
+                            ],
+                          ),
                         ),
                       ),
-                      Container(
-                        width: 2 * circleRadius,
-                        height: circleRadius,
-                        color: AppTheme.colors.surface,
-                      ),
-                      Container(
-                        width: largo/2 -circleRadius,
-                        height: circleRadius,
-                        decoration: BoxDecoration(
-                            color:AppTheme.colors.primary,
-                            borderRadius: const BorderRadius.only(bottomRight: Radius.circular(borderRadius) ,bottomLeft: Radius.circular(borderRadius))
-                        ),
-                      ),
-                    ],
-                  ),
 
-                ],
-              ),
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color:AppTheme.colors.primary,
+                                    borderRadius: const BorderRadius.only(bottomRight: Radius.circular(30.0) ,bottomLeft: Radius.circular(30.0))
+                                ),
+                              ),
+                            ),
 
-              // Picture zone
-              Column(
-                children: [
-                  SizedBox(
-                    width: largo,
-                    height: topZoneHeight - circleRadius*1.35,
-                  ),
-                  Stack(
-                    children: [
-                      Container(
-                        width: circleRadius * 2,
-                        height: circleRadius,
-                        color: AppTheme.colors.primary,
-                      ),
-                      Container(
-                        width: circleRadius * 2,
-                        height: circleRadius * 2,
-                        decoration: BoxDecoration(
-                          color: AppTheme.colors.surface,
-                          shape: BoxShape.circle,
+                            Expanded(flex: 8, child: Container()),
+
+                            Expanded(
+                              flex: 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color:AppTheme.colors.primary,
+                                    borderRadius: const BorderRadius.only(bottomRight: Radius.circular(30.0) ,bottomLeft: Radius.circular(30.0))
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     ],
                   )
-                ],
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: largo,
-                    height: topZoneHeight - circleRadius,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: largo * 0.02,
-                      ),
-                      Image.asset(
-                        'lib/assets/icons/diet_food.png',
-                        scale: largo * 0.014,
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                ),
 
 
-            ],
-          ),
+
+              ],
+            ),
+          )
         ],
       )
     );
