@@ -95,7 +95,7 @@ class _InfoPageState extends State<InfoPage> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   )
                 ),
@@ -171,6 +171,47 @@ class _InfoPageState extends State<InfoPage> {
                     ],
                   )
                 ),
+                  
+                  // Picture
+                FractionallySizedBox(
+                    widthFactor: 1,
+                    heightFactor: 0.48,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 53,
+                              child: Container(
+                                color: Colors.red,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 44,
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Center(
+                                    child: Image.asset(
+                                      'lib/assets/icons/diet_food.png',
+                                      scale: largo * 0.015,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              flex: 50,
+                              child: Container(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                ),
+
               ],
             ),
           )
