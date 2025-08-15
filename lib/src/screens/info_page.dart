@@ -54,7 +54,7 @@ class _InfoPageState extends State<InfoPage> {
                   child: Column(
                     children: [
                       Expanded(
-                        flex: 8,
+                        flex: 7,
                         child: Container(
                           color: AppTheme.colors.primary,
                           alignment: Alignment.center,
@@ -73,7 +73,7 @@ class _InfoPageState extends State<InfoPage> {
                         child: Row(
                           children: [
                             Expanded(
-                              flex: 9,
+                              flex: 50,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color:AppTheme.colors.primary,
@@ -82,10 +82,10 @@ class _InfoPageState extends State<InfoPage> {
                               ),
                             ),
 
-                            Expanded(flex: 8, child: Container()),
+                            Expanded(flex: 44, child: Container()),
 
                             Expanded(
-                              flex: 9,
+                              flex: 50,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color:AppTheme.colors.primary,
@@ -105,7 +105,7 @@ class _InfoPageState extends State<InfoPage> {
                   // Background with primary color
                 FractionallySizedBox(
                     widthFactor: 1,
-                    heightFactor: 0.4,
+                    heightFactor: 0.41,
                     child: Column(
                       children: [
                         const Expanded(flex: 8, child: SizedBox()),
@@ -130,82 +130,47 @@ class _InfoPageState extends State<InfoPage> {
                   // Circle with surface color
                 FractionallySizedBox(
                   widthFactor: 1,
-                  heightFactor: 0.82,
+                  heightFactor: 0.50,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 9, child: SizedBox()),
-
-                            Expanded(
-                              flex: 8, child: Container(
-                              decoration: BoxDecoration(
-                                  color:AppTheme.colors.surface,
-                                  shape: BoxShape.circle
-                              ),
-                            ),),
-
-                            const Expanded(flex: 9, child: SizedBox()),
-                          ],
-                        ),
-                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 50,
+                            child: Container(
+                              color: Colors.red,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 44,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final diameter = constraints.maxWidth;
+                                return Center(
+                                  child: Container(
+                                    width: diameter,
+                                    height: diameter,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.colors.surface,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 50,
+                            child: Container(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   )
                 ),
-
-                  // Picture
-                FractionallySizedBox(
-                    widthFactor: 1,
-                    heightFactor: 0.83,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              const Expanded(flex: 9, child: SizedBox()),
-
-                              Expanded(
-                                flex: 8, child: Container(
-                                  decoration: BoxDecoration(
-                                      color:AppTheme.colors.surface,
-                                      shape: BoxShape.circle
-                                  ),
-                                child: Row(
-                                  children: [
-                                    const Expanded(flex: 1 , child: SizedBox()),
-                                    Expanded(
-                                      flex: 13,
-                                      child: Image.asset(
-                                      'lib/assets/icons/diet_food.png',
-                                      scale: largo * 0.015,
-                                    ),)
-                                  ],
-                                )
-                              ),
-                              ),
-
-                              const Expanded(flex: 9, child: SizedBox()),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                ),
-
-
-                // Cards zone
-                Column(
-                  children: [
-                    const Spacer(flex: 49),
-                    Expanded(
-                      flex: 55,
-                      child: Container(
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           )
