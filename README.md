@@ -4,7 +4,7 @@ Aplicación móvil para la visualización de información asociada a una base de
 
 ---
 
-> ⚠️ **Nota:** Actualmente, el funcionamiento de la aplicación se encuentra en pausa debido a una actualización mayor en el backend (API) y un proceso de refactorización integral de la app. Pronto habrá nuevas mejoras y funcionalidades.
+> ⚠️ **Nota:** Actualmente, el funcionamiento de la aplicación se encuentra en pausa debido a una actualización mayor en el backend (API) y un proceso de refactorización integral de la app.
 
 ---
 
